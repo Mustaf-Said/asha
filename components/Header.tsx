@@ -1,37 +1,114 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const guidanceCategories = [
+  { title: "Nursing Students", slug: "/guidance/students" },
+  { title: "Career Development", slug: "/guidance/career" },
+  { title: "Leadership", slug: "/guidance/leadership" },
+  { title: "Wellbeing", slug: "/guidance/wellbeing" },
+  { title: "International Nursing", slug: "/guidance/international" },
+];
 
 export default function Header() {
-  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [guidanceOpen, setGuidanceOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const isGuidanceActive = pathname.startsWith("/guidance");
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setGuidanceOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const linkBase = "transition";
+  const linkActive = "text-teal-600 font-medium";
+  const linkInactive = "text-slate-700 hover:text-slate-900";
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
         {/* Logo */}
-        <Link href="/" className="text-lg font-semibold text-slate-900">
+        <Link
+          href="/"
+          className={`text-lg font-semibold ${pathname === "/" ? linkActive : "text-slate-900"
+            }`}
+        >
           Nursing Platform
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8 text-sm text-slate-700">
-          <Link href="/guidance" className="hover:text-slate-900">
-            Guidance
-          </Link>
-          <Link href="/community" className="hover:text-slate-900">
+        <nav className="hidden md:flex items-center gap-8 text-sm">
+
+          {/* Guidance Dropdown (CLICK) */}
+          <div ref={dropdownRef} className="relative">
+            <button
+              onClick={() => setGuidanceOpen(!guidanceOpen)}
+              className={`flex items-center gap-1 ${isGuidanceActive ? linkActive : linkInactive
+                } ${linkBase}`}
+              aria-expanded={guidanceOpen}
+            >
+              Guidance
+              <span className="text-xs">▾</span>
+            </button>
+
+            {guidanceOpen && (
+              <div className="absolute left-0 top-full mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-lg p-2">
+                {guidanceCategories.map((cat) => (
+                  <Link
+                    key={cat.slug}
+                    href={cat.slug}
+                    onClick={() => setGuidanceOpen(false)}
+                    className={`block px-4 py-2 rounded-lg text-sm ${pathname === cat.slug
+                        ? "bg-teal-50 text-teal-700 font-medium"
+                        : "text-slate-700 hover:bg-slate-100"
+                      }`}
+                  >
+                    {cat.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <Link
+            href="/community"
+            className={`${pathname === "/community" ? linkActive : linkInactive} ${linkBase}`}
+          >
             Community
           </Link>
-          <Link href="/shop" className="hover:text-slate-900">
+
+          <Link
+            href="/shop"
+            className={`${pathname === "/shop" ? linkActive : linkInactive} ${linkBase}`}
+          >
             Shop
           </Link>
-          <Link href="/about" className="hover:text-slate-900">
+
+          <Link
+            href="/about"
+            className={`${pathname === "/about" ? linkActive : linkInactive} ${linkBase}`}
+          >
             About
           </Link>
         </nav>
 
-        {/* CTA */}
+        {/* CTA Desktop */}
         <div className="hidden md:block">
           <Link
             href="/community"
@@ -43,7 +120,7 @@ export default function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          onClick={() => setOpen(!open)}
+          onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden text-slate-700"
           aria-label="Toggle menu"
         >
@@ -52,24 +129,71 @@ export default function Header() {
       </div>
 
       {/* Mobile Menu */}
-      {open && (
+      {mobileOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white">
-          <nav className="px-6 py-4 flex flex-col gap-4 text-sm text-slate-700">
-            <Link href="/guidance" onClick={() => setOpen(false)}>
-              Guidance
-            </Link>
-            <Link href="/community" onClick={() => setOpen(false)}>
-              Community
-            </Link>
-            <Link href="/shop" onClick={() => setOpen(false)}>
-              Shop
-            </Link>
-            <Link href="/about" onClick={() => setOpen(false)}>
-              About
-            </Link>
+          <nav className="px-6 py-4 flex flex-col gap-4 text-sm">
+
+            {/* Mobile Guidance */}
+            <div>
+              <button
+                onClick={() => setGuidanceOpen(!guidanceOpen)}
+                className={`w-full flex justify-between items-center ${isGuidanceActive ? linkActive : linkInactive
+                  }`}
+              >
+                Guidance
+                <span>▾</span>
+              </button>
+
+              {guidanceOpen && (
+                <div className="mt-2 ml-4 flex flex-col gap-2">
+                  {guidanceCategories.map((cat) => (
+                    <Link
+                      key={cat.slug}
+                      href={cat.slug}
+                      onClick={() => {
+                        setMobileOpen(false);
+                        setGuidanceOpen(false);
+                      }}
+                      className={
+                        pathname === cat.slug
+                          ? "text-teal-600 font-medium"
+                          : "text-slate-600"
+                      }
+                    >
+                      {cat.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Link
               href="/community"
-              onClick={() => setOpen(false)}
+              onClick={() => setMobileOpen(false)}
+              className={pathname === "/community" ? linkActive : linkInactive}
+            >
+              Community
+            </Link>
+
+            <Link
+              href="/shop"
+              onClick={() => setMobileOpen(false)}
+              className={pathname === "/shop" ? linkActive : linkInactive}
+            >
+              Shop
+            </Link>
+
+            <Link
+              href="/about"
+              onClick={() => setMobileOpen(false)}
+              className={pathname === "/about" ? linkActive : linkInactive}
+            >
+              About
+            </Link>
+
+            <Link
+              href="/community"
+              onClick={() => setMobileOpen(false)}
               className="mt-2 bg-teal-600 text-white px-4 py-2 rounded-lg text-center"
             >
               Join Community
