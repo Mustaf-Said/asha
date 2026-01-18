@@ -3,6 +3,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Project Struktur
 
+```bash
+
 app/
 ├─ page.tsx # Homepage
 ├─ about/
@@ -22,7 +24,11 @@ lib/
 ├─ queries.ts
 styles/
 
+```
+
 ## Sanity Struktur
+
+```bash
 
 sanity/
 └─ schemas/
@@ -31,6 +37,8 @@ sanity/
 ├─ page.ts
 ├─ home.ts
 └─ index.ts
+
+```
 
 ## Getting Started
 
