@@ -1,4 +1,36 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+'
+
+## Project Struktur
+
+app/
+├─ page.tsx # Homepage
+├─ about/
+│ └─ page.tsx
+├─ guidance/
+│ ├─ page.tsx # list
+│ └─ [slug]/page.tsx # article
+├─ community/
+│ └─ page.tsx
+├─ shop/
+│ └─ page.tsx
+├─ legal/
+│ └─ [slug]/page.tsx
+components/
+lib/
+├─ sanity.client.ts
+├─ queries.ts
+styles/
+
+## Sanity Struktur
+
+sanity/
+└─ schemas/
+├─ article.ts
+├─ category.ts
+├─ page.ts
+├─ home.ts
+└─ index.ts
 
 ## Getting Started
 
