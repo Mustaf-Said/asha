@@ -2,23 +2,26 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const guidanceCategories = [
-  { title: "Nursing Students", slug: "/guidance/students" },
-  { title: "Career Development", slug: "/guidance/career" },
-  { title: "Leadership", slug: "/guidance/leadership" },
-  { title: "Wellbeing", slug: "/guidance/wellbeing" },
-  { title: "International Nursing", slug: "/guidance/international" },
+  { title: "Nursing Students", slug: "nursing-students" },
+  { title: "Career Development", slug: "career" },
+  { title: "Leadership", slug: "leadership" },
+  { title: "Wellbeing", slug: "wellbeing" },
+  { title: "International Nursing", slug: "international-nursing" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [guidanceOpen, setGuidanceOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const isGuidanceActive = pathname.startsWith("/guidance");
+  const activeCategory = searchParams.get("category");
+  const isGuidanceActive = pathname === "/guidance";
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -32,7 +35,8 @@ export default function Header() {
     }
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const linkBase = "transition";
@@ -42,7 +46,6 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-
         {/* Logo */}
         <Link
           href="/"
@@ -54,12 +57,13 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8 text-sm">
-
-          {/* Guidance Dropdown (CLICK) */}
+          {/* Guidance Dropdown */}
           <div ref={dropdownRef} className="relative">
             <button
               onClick={() => setGuidanceOpen(!guidanceOpen)}
-              className={`flex items-center gap-1 ${isGuidanceActive ? linkActive : linkInactive
+              className={`flex items-center gap-1 ${isGuidanceActive || activeCategory
+                  ? linkActive
+                  : linkInactive
                 } ${linkBase}`}
               aria-expanded={guidanceOpen}
             >
@@ -72,12 +76,12 @@ export default function Header() {
                 {guidanceCategories.map((cat) => (
                   <Link
                     key={cat.slug}
-                    href={cat.slug}
-                    onClick={() => setGuidanceOpen(false)}
-                    className={`block px-4 py-2 rounded-lg text-sm ${pathname === cat.slug
+                    href={`/guidance?category=${cat.slug}`}
+                    className={`block px-4 py-2 rounded-lg ${activeCategory === cat.slug
                         ? "bg-teal-50 text-teal-700 font-medium"
-                        : "text-slate-700 hover:bg-slate-100"
+                        : "hover:bg-slate-100"
                       }`}
+                    onClick={() => setGuidanceOpen(false)}
                   >
                     {cat.title}
                   </Link>
@@ -132,12 +136,13 @@ export default function Header() {
       {mobileOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white">
           <nav className="px-6 py-4 flex flex-col gap-4 text-sm">
-
             {/* Mobile Guidance */}
             <div>
               <button
                 onClick={() => setGuidanceOpen(!guidanceOpen)}
-                className={`w-full flex justify-between items-center ${isGuidanceActive ? linkActive : linkInactive
+                className={`w-full flex justify-between items-center ${isGuidanceActive || activeCategory
+                    ? linkActive
+                    : linkInactive
                   }`}
               >
                 Guidance
@@ -149,13 +154,13 @@ export default function Header() {
                   {guidanceCategories.map((cat) => (
                     <Link
                       key={cat.slug}
-                      href={cat.slug}
+                      href={`/guidance?category=${cat.slug}`}
                       onClick={() => {
                         setMobileOpen(false);
                         setGuidanceOpen(false);
                       }}
                       className={
-                        pathname === cat.slug
+                        activeCategory === cat.slug
                           ? "text-teal-600 font-medium"
                           : "text-slate-600"
                       }

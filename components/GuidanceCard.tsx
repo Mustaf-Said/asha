@@ -1,16 +1,23 @@
+import Link from "next/link";
+
 type GuidanceCardProps = {
   title: string;
   excerpt: string;
   category: string;
+  slug: string;
 };
 
 export default function GuidanceCard({
   title,
   excerpt,
   category,
+  slug,
 }: GuidanceCardProps) {
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md transition">
+    <Link
+      href={`/guidance/${slug}`}
+      className="block bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md transition"
+    >
       <span className="text-xs text-teal-600 font-medium">
         {category}
       </span>
@@ -23,9 +30,9 @@ export default function GuidanceCard({
         {excerpt}
       </p>
 
-      <button className="mt-4 text-teal-600 text-sm font-medium">
+      <span className="mt-4 inline-block text-teal-600 text-sm font-medium">
         Read more →
-      </button>
-    </div>
+      </span>
+    </Link>
   );
 }

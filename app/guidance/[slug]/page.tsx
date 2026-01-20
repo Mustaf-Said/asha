@@ -1,0 +1,150 @@
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { sanityClient } from "@/lib/sanity.client";
+import { articleBySlugQuery } from "@/lib/queries";
+import { notFound } from "next/navigation";
+import { PortableText } from "@portabletext/react";
+import { relatedArticlesQuery } from "@/lib/queries";
+
+import type { Metadata } from "next";
+
+// Type for related articles
+type RelatedArticle = {
+  _id: string;
+  slug: string;
+  title: string;
+  excerpt?: string;
+};
+
+/* -----------------------------
+   TYPES (params IS A PROMISE)
+----------------------------- */
+type PageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+/* -----------------------------
+   SEO METADATA
+----------------------------- */
+export async function generateMetadata(
+  { params }: PageProps
+): Promise<Metadata> {
+  const { slug } = await params;
+
+  const article = await sanityClient.fetch(articleBySlugQuery, {
+    slug,
+  });
+
+  if (!article) {
+    return { title: "Article not found" };
+  }
+
+  return {
+    title: article.seoTitle || article.title,
+    description:
+      article.seoDescription ||
+      article.excerpt ||
+      "Nursing guidance article",
+    openGraph: {
+      title: article.seoTitle || article.title,
+      description: article.seoDescription || article.excerpt || "",
+      type: "article",
+    },
+  };
+}
+
+/* -----------------------------
+   PAGE
+----------------------------- */
+export default async function ArticlePage({ params }: PageProps) {
+  const { slug } = await params;
+
+  const article = await sanityClient.fetch(articleBySlugQuery, {
+    slug,
+  });
+
+  if (!article) {
+    notFound();
+  }
+
+  const relatedArticles = await sanityClient.fetch(
+    relatedArticlesQuery,
+    {
+      categoryId: article.category._id,
+      slug,
+    }
+  );
+
+
+  return (
+    <article className="pt-6 pb-16">
+      <div className="max-w-6xl mx-auto px-6 mb-6">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Guidance", href: "/guidance" },
+            {
+              label: article.category.title,
+              href: `/guidance?category=${article.category.slug}`,
+            },
+            { label: article.title },
+          ]}
+        />
+
+      </div>
+
+      <div className="max-w-3xl mx-auto px-6">
+        <span className="inline-block text-xs font-medium text-teal-700 bg-teal-50 px-3 py-1 rounded-full">
+          {article.category.title}
+        </span>
+
+        <h1 className="mt-4 text-3xl md:text-4xl font-semibold text-slate-900 leading-tight">
+          {article.title}
+        </h1>
+
+        {article.excerpt && (
+          <p className="mt-4 text-lg text-slate-600 max-w-2xl">
+            {article.excerpt}
+          </p>
+        )}
+
+        <div className="prose prose-slate max-w-none mt-10">
+          <PortableText value={article.content} />
+        </div>
+      </div>
+      {relatedArticles.length > 0 && (
+        <section className="mt-16 border-t border-slate-200 pt-10">
+          <h2 className="text-xl font-semibold text-slate-900 mb-6">
+            Related articles
+          </h2>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {relatedArticles.map((item: RelatedArticle) => (
+              <a
+                key={item._id}
+                href={`/guidance/${item.slug}`}
+                className="block border border-slate-200 rounded-xl p-5 hover:shadow-md transition"
+              >
+                <h3 className="font-medium text-slate-900">
+                  {item.title}
+                </h3>
+
+                {item.excerpt && (
+                  <p className="mt-2 text-sm text-slate-600">
+                    {item.excerpt}
+                  </p>
+                )}
+
+                <span className="mt-4 inline-block text-sm text-teal-600 font-medium">
+                  Read more →
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+    </article>
+  );
+}

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="bg-slate-900 text-slate-300">
@@ -20,11 +22,11 @@ export default function Footer() {
             Guidance
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><a href="/guidance/students" className="hover:text-white">Nursing Students</a></li>
-            <li><a href="/guidance/career" className="hover:text-white">Career Development</a></li>
-            <li><a href="/guidance/leadership" className="hover:text-white">Leadership</a></li>
-            <li><a href="/guidance/wellbeing" className="hover:text-white">Wellbeing</a></li>
-            <li><a href="/guidance/international" className="hover:text-white">International Nursing</a></li>
+            <li><Link href="/guidance?category=nursing-students" className="hover:text-white">Nursing Students</Link></li>
+            <li><Link href="/guidance?category=career-development" className="hover:text-white">Career Development</Link></li>
+            <li><Link href="/guidance?category=leadership" className="hover:text-white">Leadership</Link></li>
+            <li><Link href="/guidance?category=wellbeing" className="hover:text-white">Wellbeing</Link></li>
+            <li><Link href="/guidance?category=international-nursing" className="hover:text-white">International Nursing</Link></li>
           </ul>
         </div>
 
@@ -34,9 +36,9 @@ export default function Footer() {
             Community
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><a href="/community" className="hover:text-white">Join the Community</a></li>
-            <li><a href="/community/rules" className="hover:text-white">Community Guidelines</a></li>
-            <li><a href="/about" className="hover:text-white">About the Founder</a></li>
+            <li><Link href="/community" className="hover:text-white">Join the Community</Link></li>
+            <li><Link href="/community/rules" className="hover:text-white">Community Guidelines</Link></li>
+            <li><Link href="/about" className="hover:text-white">About the Founder</Link></li>
           </ul>
         </div>
 
@@ -46,9 +48,9 @@ export default function Footer() {
             Legal
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><a href="/legal/disclaimer" className="hover:text-white">Disclaimer</a></li>
-            <li><a href="/legal/privacy-policy" className="hover:text-white">Privacy Policy</a></li>
-            <li><a href="/legal/terms" className="hover:text-white">Terms & Conditions</a></li>
+            <li><a href="#" className="hover:text-white">Disclaimer</a></li>
+            <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
+            <li><a href="#" className="hover:text-white">Terms & Conditions</a></li>
           </ul>
         </div>
       </div>
