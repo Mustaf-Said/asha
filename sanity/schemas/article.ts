@@ -4,6 +4,7 @@ export default defineType({
   name: "article",
   title: "Article",
   type: "document",
+
   fields: [
     defineField({
       name: "title",
@@ -11,6 +12,7 @@ export default defineType({
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: "slug",
       title: "Slug",
@@ -18,12 +20,24 @@ export default defineType({
       options: { source: "title" },
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: "excerpt",
       title: "Excerpt",
       type: "text",
       rows: 3,
     }),
+
+    // ✅ ADD THIS
+    defineField({
+      name: "mainImage",
+      title: "Main image",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+    }),
+
     defineField({
       name: "category",
       title: "Category",
@@ -31,12 +45,14 @@ export default defineType({
       to: [{ type: "category" }],
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: "content",
       title: "Content",
       type: "array",
       of: [{ type: "block" }],
     }),
+
     defineField({
       name: "publishedAt",
       title: "Published at",
@@ -49,6 +65,7 @@ export default defineType({
       title: "SEO Title",
       type: "string",
     }),
+
     defineField({
       name: "seoDescription",
       title: "SEO Description",

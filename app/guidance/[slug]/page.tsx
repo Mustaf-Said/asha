@@ -28,7 +28,7 @@ type PageProps = {
    SEO METADATA
 ----------------------------- */
 export async function generateMetadata(
-  { params }: PageProps
+  { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params;
 
@@ -37,22 +37,20 @@ export async function generateMetadata(
   });
 
   if (!article) {
-    return { title: "Article not found" };
+    return {};
   }
 
   return {
-    title: article.seoTitle || article.title,
-    description:
-      article.seoDescription ||
-      article.excerpt ||
-      "Nursing guidance article",
+    title: article.title,
+    description: article.excerpt,
     openGraph: {
-      title: article.seoTitle || article.title,
-      description: article.seoDescription || article.excerpt || "",
-      type: "article",
+      title: article.title,
+      description: article.excerpt,
+      images: [`/guidance/${slug}/opengraph-image`],
     },
   };
 }
+
 
 /* -----------------------------
    PAGE
