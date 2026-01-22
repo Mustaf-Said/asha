@@ -4,6 +4,8 @@ import { articleBySlugQuery } from "@/lib/queries";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import { relatedArticlesQuery } from "@/lib/queries";
+import Image from "next/image";
+import { urlFor } from "@/lib/sanity.image";
 
 import type { Metadata } from "next";
 
@@ -105,6 +107,19 @@ export default async function ArticlePage({ params }: PageProps) {
           <p className="mt-4 text-lg text-slate-600 max-w-2xl">
             {article.excerpt}
           </p>
+        )}
+
+        {article.mainImage && (
+          <div className="mt-10 rounded-xl overflow-hidden shadow-md">
+            <Image
+              src={urlFor(article.mainImage).width(800).url()}
+              alt={article.title}
+              width={800}
+              height={400}
+              priority
+              className="w-full h-auto"
+            />
+          </div>
         )}
 
         <div className="prose prose-slate max-w-none mt-10">

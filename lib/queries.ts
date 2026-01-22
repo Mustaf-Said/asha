@@ -1,7 +1,7 @@
 import { groq } from "next-sanity";
 
 /* ---------------------------------
-   Categories (Guidance dropdown)
+   Categories
 ---------------------------------- */
 export const categoriesQuery = groq`
   *[_type == "category"] | order(title asc) {
@@ -12,13 +12,14 @@ export const categoriesQuery = groq`
 `;
 
 /* ---------------------------------
-   All guidance articles (list page)
+   GUIDANCE ARTICLES
 ---------------------------------- */
 export const articlesQuery = groq`
   *[_type == "article"] | order(publishedAt desc) {
     _id,
     title,
     excerpt,
+    mainImage,
     publishedAt,
     "slug": slug.current,
     category->{
@@ -28,12 +29,12 @@ export const articlesQuery = groq`
   }
 `;
 
-
 export const articleBySlugQuery = groq`
   *[_type == "article" && slug.current == $slug][0] {
     title,
     excerpt,
     content,
+    mainImage,
     seoTitle,
     seoDescription,
     category->{
@@ -43,7 +44,6 @@ export const articleBySlugQuery = groq`
     }
   }
 `;
-
 
 export const relatedArticlesQuery = groq`
   *[
@@ -58,11 +58,6 @@ export const relatedArticlesQuery = groq`
   }
 `;
 
-
-
-/* ---------------------------------
-   Articles (optionally filtered)
----------------------------------- */
 export const articlesByCategoryQuery = groq`
   *[
     _type == "article" &&
@@ -71,6 +66,7 @@ export const articlesByCategoryQuery = groq`
     _id,
     title,
     excerpt,
+    mainImage,
     publishedAt,
     "slug": slug.current,
     category->{
@@ -80,5 +76,110 @@ export const articlesByCategoryQuery = groq`
   }
 `;
 
+/* ---------------------------------
+   COMMUNITY DISCUSSIONS
+---------------------------------- */
+export const discussionsQuery = groq`
+  *[_type == "discussion"] | order(isPinned desc, createdAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    category->{
+      title,
+      "slug": slug.current
+    },
+    author,
+    createdAt,
+    replyCount,
+    isPinned
+  }
+`;
+
+export const discussionBySlugQuery = groq`
+  *[_type == "discussion" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    content,
+    category->{
+      _id,
+      title,
+      "slug": slug.current
+    },
+    author,
+    createdAt,
+    replyCount,
+    replies[]{
+      _key,
+      text,
+      author,
+      createdAt
+    }
+  }
+`;
+
+export const discussionsByCategoryQuery = groq`
+  *[
+    _type == "discussion" &&
+    (!defined($category) || category->slug.current == $category)
+  ] | order(isPinned desc, createdAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    category->{
+      title,
+      "slug": slug.current
+    },
+    author,
+    createdAt,
+    replyCount,
+    isPinned
+  }
+`;
+
+/* ---------------------------------
+   SHOP PRODUCTS
+---------------------------------- */
+export const productsQuery = groq`
+  *[_type == "product" && isAvailable == true] | order(publishedAt desc) {
+    _id,
+    name,
+    "slug": slug.current,
+    description,
+    price,
+    mainImage,
+    productType,
+    publishedAt
+  }
+`;
+
+export const productBySlugQuery = groq`
+  *[_type == "product" && slug.current == $slug][0] {
+    name,
+    "slug": slug.current,
+    description,
+    content,
+    price,
+    mainImage,
+    productType,
+    downloadUrl,
+    publishedAt
+  }
+`;
+
+export const productsByTypeQuery = groq`
+  *[_type == "product" && productType == $type && isAvailable == true] | order(publishedAt desc) {
+    _id,
+    name,
+    "slug": slug.current,
+    description,
+    price,
+    mainImage,
+    productType
+  }
+`;
 
 

@@ -21,6 +21,7 @@ interface Article {
   _id: string;
   title: string;
   excerpt: string;
+  mainImage?: any;
   category: {
     title: string;
     slug: string;
@@ -64,6 +65,7 @@ export default async function GuidancePage({
                 excerpt={article.excerpt}
                 category={article.category.title}
                 slug={article.slug}
+                mainImage={article.mainImage}
               />
             ))}
           </div>

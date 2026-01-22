@@ -9,7 +9,17 @@ export default defineConfig({
   projectId: "4fnznls9",
   dataset: "production",
 
-  plugins: [deskTool()],
+  plugins: [
+    deskTool({
+      // Support for preview drafts
+      structure: (S) =>
+        S.list()
+          .title("Content")
+          .items([
+            ...S.documentTypeListItems(),
+          ]),
+    }),
+  ],
 
   schema: {
     types: schemaTypes,
