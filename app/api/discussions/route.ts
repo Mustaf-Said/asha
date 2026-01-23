@@ -1,25 +1,39 @@
 import { createClient } from '@sanity/client';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Create a write-enabled Sanity client for API routes
-const writeClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-  apiVersion: '2024-01-01',
-  useCdn: false,
-  token: process.env.SANITY_API_WRITE_TOKEN!,
-});
-
-// Read client for querying
-const readClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-  apiVersion: '2024-01-01',
-  useCdn: true,
-});
-
 export async function POST(request: NextRequest) {
   try {
+    // Validate environment variables
+    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+      return NextResponse.json(
+        { message: 'Sanity configuration is missing' },
+        { status: 500 }
+      );
+    }
+
+    if (!process.env.SANITY_API_WRITE_TOKEN) {
+      return NextResponse.json(
+        { message: 'Sanity write token is missing' },
+        { status: 500 }
+      );
+    }
+
+    // Create clients inside handler to avoid build-time execution
+    const writeClient = createClient({
+      projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+      dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+      apiVersion: '2024-01-01',
+      useCdn: false,
+      token: process.env.SANITY_API_WRITE_TOKEN,
+    });
+
+    const readClient = createClient({
+      projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+      dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+      apiVersion: '2024-01-01',
+      useCdn: true,
+    });
+
     const body = await request.json();
     const { title, description, content, category, author } = body;
 

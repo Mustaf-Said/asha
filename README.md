@@ -73,4 +73,25 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
+### Required Environment Variables
+
+Before deploying, you **must** configure these environment variables in your Vercel project settings:
+
+1. Go to your Vercel project → Settings → Environment Variables
+2. Add the following variables:
+
+| Variable                        | Description                              | Example      |
+| ------------------------------- | ---------------------------------------- | ------------ |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Your Sanity project ID                   | `4fnznls9`   |
+| `NEXT_PUBLIC_SANITY_DATASET`    | Sanity dataset name                      | `production` |
+| `SANITY_API_WRITE_TOKEN`        | Sanity API token with Editor permissions | `sk...`      |
+
+**How to get these values:**
+
+- Get `NEXT_PUBLIC_SANITY_PROJECT_ID` from your [Sanity dashboard](https://www.sanity.io/manage)
+- `NEXT_PUBLIC_SANITY_DATASET` is usually `production`
+- Generate `SANITY_API_WRITE_TOKEN` in Sanity dashboard → API → Tokens → Add API token (select Editor permissions)
+
+See [.env.local.example](.env.local.example) for a complete list of environment variables.
+
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
