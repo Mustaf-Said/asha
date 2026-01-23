@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 const guidanceCategories = [
   { title: "Nursing Students", slug: "nursing-students" },
@@ -16,21 +16,24 @@ export default function Header() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [guidanceOpen, setGuidanceOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
   const activeCategory = searchParams.get("category");
   const isGuidanceActive = pathname === "/guidance";
 
-  // Close dropdown on outside click
+  // 🔹 Separate states (IMPORTANT)
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopGuidanceOpen, setDesktopGuidanceOpen] = useState(false);
+  const [mobileGuidanceOpen, setMobileGuidanceOpen] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close desktop dropdown on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setGuidanceOpen(false);
+        setDesktopGuidanceOpen(false);
       }
     }
 
@@ -57,31 +60,34 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8 text-sm">
-          {/* Guidance Dropdown */}
+          {/* Guidance Dropdown (Desktop) */}
           <div ref={dropdownRef} className="relative">
             <button
-              onClick={() => setGuidanceOpen(!guidanceOpen)}
+              onClick={() =>
+                setDesktopGuidanceOpen((prev) => !prev)
+              }
               className={`flex items-center gap-1 ${isGuidanceActive || activeCategory
                   ? linkActive
                   : linkInactive
                 } ${linkBase}`}
-              aria-expanded={guidanceOpen}
+              aria-expanded={desktopGuidanceOpen}
             >
-              Guidance
-              <span className="text-xs">▾</span>
+              Guidance <span className="text-xs">▾</span>
             </button>
 
-            {guidanceOpen && (
+            {desktopGuidanceOpen && (
               <div className="absolute left-0 top-full mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-lg p-2">
                 {guidanceCategories.map((cat) => (
                   <Link
                     key={cat.slug}
                     href={`/guidance?category=${cat.slug}`}
+                    onClick={() =>
+                      setDesktopGuidanceOpen(false)
+                    }
                     className={`block px-4 py-2 rounded-lg ${activeCategory === cat.slug
                         ? "bg-teal-50 text-teal-700 font-medium"
                         : "hover:bg-slate-100"
                       }`}
-                    onClick={() => setGuidanceOpen(false)}
                   >
                     {cat.title}
                   </Link>
@@ -124,7 +130,7 @@ export default function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          onClick={() => setMobileOpen(!mobileOpen)}
+          onClick={() => setMobileOpen((prev) => !prev)}
           className="md:hidden text-slate-700"
           aria-label="Toggle menu"
         >
@@ -139,17 +145,18 @@ export default function Header() {
             {/* Mobile Guidance */}
             <div>
               <button
-                onClick={() => setGuidanceOpen(!guidanceOpen)}
+                onClick={() =>
+                  setMobileGuidanceOpen((prev) => !prev)
+                }
                 className={`w-full flex justify-between items-center ${isGuidanceActive || activeCategory
                     ? linkActive
                     : linkInactive
                   }`}
               >
-                Guidance
-                <span>▾</span>
+                Guidance <span>▾</span>
               </button>
 
-              {guidanceOpen && (
+              {mobileGuidanceOpen && (
                 <div className="mt-2 ml-4 flex flex-col gap-2">
                   {guidanceCategories.map((cat) => (
                     <Link
@@ -157,12 +164,12 @@ export default function Header() {
                       href={`/guidance?category=${cat.slug}`}
                       onClick={() => {
                         setMobileOpen(false);
-                        setGuidanceOpen(false);
+                        setMobileGuidanceOpen(false);
                       }}
                       className={
                         activeCategory === cat.slug
                           ? "text-teal-600 font-medium"
-                          : "text-slate-600"
+                          : "text-slate-600 hover:text-slate-900"
                       }
                     >
                       {cat.title}

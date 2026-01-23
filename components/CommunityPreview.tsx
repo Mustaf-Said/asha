@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export default function CommunityPreview() {
   return (
@@ -19,7 +20,16 @@ export default function CommunityPreview() {
           </Link>
         </div>
 
-        <div className="relative h-80 rounded-xl overflow-hidden border border-slate-200 shadow-lg bg-linear-to-br from-teal-100 to-teal-50">
+        <div className="relative h-80 rounded-xl overflow-hidden border border-slate-200 shadow-lg bg-linear-to-br from-teal-50 to-blue-50">
+          <Image
+            src="/images/community/image.png"
+            fill
+            alt="Nursing community"
+            className="object-cover"
+            priority
+            loading="eager"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
         </div>
       </div>
     </section>
