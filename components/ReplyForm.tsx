@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { useUser } from '@/hooks/useUser';
 
 type ReplyFormProps = {
   discussionId: string;
@@ -9,11 +11,31 @@ type ReplyFormProps = {
 };
 
 export default function ReplyForm({ discussionId, discussionSlug, onReplyAdded }: ReplyFormProps) {
+  const { user } = useUser();
   const [replyText, setReplyText] = useState('');
-  const [author, setAuthor] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // If user is not logged in, show login prompt
+  if (!user) {
+    return (
+      <div className="bg-slate-50 rounded-xl p-8 border border-slate-200">
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">
+          Join the Discussion
+        </h2>
+        <p className="text-slate-600 mb-6">
+          Please log in to reply to discussions.
+        </p>
+        <Link
+          href="/login"
+          className="inline-block bg-teal-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-teal-700 transition"
+        >
+          Log In to Reply
+        </Link>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,10 +48,6 @@ export default function ReplyForm({ discussionId, discussionSlug, onReplyAdded }
         throw new Error('Reply cannot be empty');
       }
 
-      if (!author.trim()) {
-        throw new Error('Name is required');
-      }
-
       const response = await fetch('/api/replies', {
         method: 'POST',
         headers: {
@@ -37,7 +55,7 @@ export default function ReplyForm({ discussionId, discussionSlug, onReplyAdded }
         },
         body: JSON.stringify({
           text: replyText.trim(),
-          author: author.trim(),
+          author: user.name || user.email || 'Anonymous',
           discussionId,
           discussionSlug,
         }),
@@ -49,7 +67,6 @@ export default function ReplyForm({ discussionId, discussionSlug, onReplyAdded }
       }
 
       setReplyText('');
-      setAuthor('');
       setSuccess(true);
 
       // Clear success message after 3 seconds
@@ -75,22 +92,6 @@ export default function ReplyForm({ discussionId, discussionSlug, onReplyAdded }
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name Field */}
-        <div>
-          <label htmlFor="author" className="block text-sm font-medium text-slate-700 mb-2">
-            Your Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            placeholder="Enter your name"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            disabled={isLoading}
-          />
-        </div>
-
         {/* Reply Text */}
         <div>
           <label htmlFor="reply" className="block text-sm font-medium text-slate-700 mb-2">

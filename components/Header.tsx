@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useUser } from "@/hooks/useUser";
 
 const guidanceCategories = [
   { title: "Nursing Students", slug: "nursing-students" },
@@ -15,6 +16,7 @@ const guidanceCategories = [
 export default function Header() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { user, logout } = useUser();
 
   const activeCategory = searchParams.get("category");
   const isGuidanceActive = pathname === "/guidance";
@@ -67,8 +69,8 @@ export default function Header() {
                 setDesktopGuidanceOpen((prev) => !prev)
               }
               className={`flex items-center gap-1 ${isGuidanceActive || activeCategory
-                  ? linkActive
-                  : linkInactive
+                ? linkActive
+                : linkInactive
                 } ${linkBase}`}
               aria-expanded={desktopGuidanceOpen}
             >
@@ -85,8 +87,8 @@ export default function Header() {
                       setDesktopGuidanceOpen(false)
                     }
                     className={`block px-4 py-2 rounded-lg ${activeCategory === cat.slug
-                        ? "bg-teal-50 text-teal-700 font-medium"
-                        : "hover:bg-slate-100"
+                      ? "bg-teal-50 text-teal-700 font-medium"
+                      : "hover:bg-slate-100"
                       }`}
                   >
                     {cat.title}
@@ -119,13 +121,35 @@ export default function Header() {
         </nav>
 
         {/* CTA Desktop */}
-        <div className="hidden md:block">
-          <Link
-            href="/community"
-            className="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-700 transition"
-          >
-            Join Community
-          </Link>
+        <div className="hidden md:flex items-center gap-3">
+          {user ? (
+            <>
+              <span className="text-sm text-slate-600">
+                {user.email}
+              </span>
+              <button
+                onClick={logout}
+                className="text-slate-600 hover:text-slate-900 text-sm font-medium transition"
+              >
+                Log Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-slate-600 hover:text-slate-900 text-sm font-medium transition"
+              >
+                Log In
+              </Link>
+              <Link
+                href="/community"
+                className="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-700 transition"
+              >
+                Join Community
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -149,8 +173,8 @@ export default function Header() {
                   setMobileGuidanceOpen((prev) => !prev)
                 }
                 className={`w-full flex justify-between items-center ${isGuidanceActive || activeCategory
-                    ? linkActive
-                    : linkInactive
+                  ? linkActive
+                  : linkInactive
                   }`}
               >
                 Guidance <span>▾</span>
@@ -203,13 +227,41 @@ export default function Header() {
               About
             </Link>
 
-            <Link
-              href="/community"
-              onClick={() => setMobileOpen(false)}
-              className="mt-2 bg-teal-600 text-white px-4 py-2 rounded-lg text-center"
-            >
-              Join Community
-            </Link>
+            <div className="mt-4 pt-4 border-t border-slate-200 space-y-2">
+              {user ? (
+                <>
+                  <div className="text-sm text-slate-600 px-4 py-2">
+                    Logged in as: {user.email}
+                  </div>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileOpen(false);
+                    }}
+                    className="w-full text-left text-slate-600 hover:text-slate-900 px-4 py-2"
+                  >
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="block text-slate-600 hover:text-slate-900 px-4 py-2"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    href="/community"
+                    onClick={() => setMobileOpen(false)}
+                    className="block bg-teal-600 text-white px-4 py-2 rounded-lg text-center"
+                  >
+                    Join Community
+                  </Link>
+                </>
+              )}
+            </div>
           </nav>
         </div>
       )}

@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import GuidanceHeader from '@/components/GuidanceHeader';
+import { useUser } from '@/hooks/useUser';
 
 type FormData = {
   title: string;
   description: string;
   content: string;
   category: string;
-  author: string;
 };
 
 type Category = {
@@ -21,6 +21,7 @@ type Category = {
 
 export default function NewDiscussionPage() {
   const router = useRouter();
+  const { user, isLoading: userLoading } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -29,8 +30,14 @@ export default function NewDiscussionPage() {
     description: '',
     content: '',
     category: '',
-    author: '',
   });
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.push('/login');
+    }
+  }, [userLoading, user, router]);
 
   // Fetch categories on mount
   useEffect(() => {
@@ -70,9 +77,6 @@ export default function NewDiscussionPage() {
       if (!formData.description.trim()) {
         throw new Error('Description is required');
       }
-      if (!formData.author.trim()) {
-        throw new Error('Author name is required');
-      }
 
       // Call API endpoint to create discussion
       const response = await fetch('/api/discussions', {
@@ -85,7 +89,7 @@ export default function NewDiscussionPage() {
           description: formData.description.trim(),
           content: formData.content.trim() || formData.description.trim(),
           category: formData.category || null,
-          author: formData.author.trim(),
+          author: user?.name || user?.email || 'Anonymous',
         }),
       });
 
@@ -104,36 +108,27 @@ export default function NewDiscussionPage() {
     }
   };
 
+  // Show loading state while checking authentication
+  if (userLoading) {
+    return (
+      <div>
+        <GuidanceHeader />
+        <div className="max-w-2xl mx-auto px-6 py-12">
+          <div className="text-center">
+            <p className="text-slate-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <GuidanceHeader
-        title="Start a New Discussion"
-        description="Share your thoughts, ask questions, or start a conversation with the nursing community."
-      />
+      <GuidanceHeader />
 
       <div className="max-w-2xl mx-auto px-6 py-12">
         <div className="bg-white rounded-lg border border-slate-200 p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Author Name */}
-            <div>
-              <label htmlFor="author" className="block text-sm font-semibold text-slate-900 mb-2">
-                Your Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="author"
-                name="author"
-                value={formData.author}
-                onChange={handleChange}
-                placeholder="Enter your name"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition"
-                disabled={isLoading}
-              />
-              <p className="text-xs text-slate-500 mt-1">
-                Your name will be displayed with your discussion
-              </p>
-            </div>
-
             {/* Title */}
             <div>
               <label htmlFor="title" className="block text-sm font-semibold text-slate-900 mb-2">

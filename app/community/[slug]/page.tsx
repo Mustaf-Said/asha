@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ReplyForm from "@/components/ReplyForm";
+import { getSession } from "@/auth.config";
 import type { Metadata } from "next";
 
 type PageProps = {
@@ -55,6 +56,7 @@ type Discussion = {
 
 export default async function DiscussionPage({ params }: PageProps) {
   const { slug } = await params;
+  const user = await getSession();
 
   const discussion = await sanityClient.fetch<Discussion>(
     discussionBySlugQuery,
@@ -143,9 +145,16 @@ export default async function DiscussionPage({ params }: PageProps) {
             Replies ({discussion.replyCount})
           </h2>
 
-          {!discussion.replies || discussion.replies.length === 0 ? (
+          {!user ? (
             <div className="text-center py-12 bg-slate-50 rounded-xl border border-slate-200">
-              <p className="text-slate-600">No replies yet. Be the first to join!</p>
+              <p className="text-slate-600 mb-4">Please log in to view replies.</p>
+              <a href="/login" className="inline-block bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition">
+                Log In to View Replies
+              </a>
+            </div>
+          ) : !discussion.replies || discussion.replies.length === 0 ? (
+            <div className="text-center py-12 bg-slate-50 rounded-xl border border-slate-200">
+              <p className="text-slate-600">No replies yet. Be the first to join the discussion!</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -154,7 +163,7 @@ export default async function DiscussionPage({ params }: PageProps) {
                   key={reply._key}
                   className="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition"
                 >
-                  <div className="flex justify-between items-start mb-2">
+                  <div className="flex justify-between items-start mb-3">
                     <span className="font-semibold text-slate-900">
                       {reply.author || "Anonymous"}
                     </span>
@@ -162,7 +171,7 @@ export default async function DiscussionPage({ params }: PageProps) {
                       {formatDate(reply.createdAt)}
                     </span>
                   </div>
-                  <p className="text-slate-700 leading-relaxed">{reply.text}</p>
+                  <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{reply.text}</p>
                 </div>
               ))}
             </div>
