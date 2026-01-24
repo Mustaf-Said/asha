@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-
+import Image from "next/image";
 export const metadata: Metadata = {
   title: "About Asha | Professional Nursing Platform",
   description: "Learn about Asha - a Senior Staff Nurse with 16+ years of experience dedicated to supporting nurses worldwide.",
@@ -100,7 +100,17 @@ export default function AboutPage() {
 
         {/* CTA Section with Image */}
         <div className="mt-16 grid md:grid-cols-2 gap-8 items-center">
-          <div className="relative h-80 rounded-xl overflow-hidden bg-linear-to-br from-teal-100 via-teal-50 to-slate-100"></div>
+          <div className="relative h-80 rounded-xl overflow-hidden border border-slate-200 shadow-lg bg-linear-to-br from-teal-50 to-blue-50">
+            <Image
+              src="/images/about/journy.png"
+              fill
+              alt="Nursing community"
+              className="object-cover"
+              priority
+              loading="eager"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
           <div className="bg-teal-50 rounded-xl p-8 border border-teal-200">
             <h3 className="text-2xl font-semibold text-slate-900 mb-4">
               Ready to Start Your Journey?
