@@ -99,7 +99,7 @@ export default async function ArticlePage({ params }: PageProps) {
           {article.category.title}
         </span>
 
-        <h1 className="mt-4 text-3xl md:text-4xl font-semibold text-slate-900 leading-tight">
+        <h1 className="mt-4 text-3xl md:text-4xl font-semibold text-teal-900 leading-tight">
           {article.title}
         </h1>
 

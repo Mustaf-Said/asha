@@ -52,10 +52,8 @@ export default async function GuidancePage({
 
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-6">
-          <CategoryFilter
-            categories={categories}
-            activeCategory={activeCategory}
-          />
+          <CategoryFilter categories={categories} />
+
 
           <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((article: Article) => (
