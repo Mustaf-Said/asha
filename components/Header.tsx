@@ -6,12 +6,46 @@ import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
 
 const guidanceCategories = [
-  { title: "Nursing Students", slug: "nursing-students" },
-  { title: "Career Development", slug: "career" },
-  { title: "Leadership", slug: "leadership" },
-  { title: "Wellbeing", slug: "wellbeing" },
-  { title: "International Nursing", slug: "international-nursing" },
+  { title: "Nursing Students", slug: "nursing-students", icon: "👨‍🎓" },
+  { title: "Career Development", slug: "career", icon: "💼" },
+  { title: "Leadership", slug: "leadership", icon: "👥" },
+  { title: "Wellbeing", slug: "wellbeing", icon: "🧘" },
+  { title: "International Nursing", slug: "international-nursing", icon: "🌍" },
 ];
+
+// Icon components
+const Icons = {
+  Heart: () => (
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
+    </svg>
+  ),
+  Users: () => (
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM9 10a3 3 0 11-6 0 3 3 0 016 0zM12.935 16H7.065a1 1 0 00-.995 1.1A4 4 0 0011 16a4 4 0 004.995-1.1 1 1 0 00-.995-1.1z" />
+    </svg>
+  ),
+  Menu: () => (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  ),
+  Close: () => (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  ),
+  ChevronDown: () => (
+    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+    </svg>
+  ),
+  LogOut: () => (
+    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+      <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+    </svg>
+  ),
+};
 
 export default function Header() {
   const pathname = usePathname();
@@ -21,14 +55,12 @@ export default function Header() {
   const activeCategory = searchParams.get("category");
   const isGuidanceActive = pathname === "/guidance";
 
-  // 🔹 Separate states (IMPORTANT)
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopGuidanceOpen, setDesktopGuidanceOpen] = useState(false);
   const [mobileGuidanceOpen, setMobileGuidanceOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close desktop dropdown on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -44,158 +76,44 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const linkBase = "transition";
-  const linkActive = "text-teal-600 font-medium";
-  const linkInactive = "text-blue-700 hover:text-blue-900";
-
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-blue-200">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link
-          href="/"
-          className={`text-lg font-semibold ${pathname === "/" ? linkActive : "text-blue-900"
-            }`}
-        >
-          Nursing Platform
-        </Link>
+    <header className="sticky top-0 z-50 bg-gradient-to-r from-teal-600 via-teal-500 to-cyan-500 shadow-lg border-b border-teal-700">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          {/* <Link
+          </Link> */}
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8 text-sm">
-          {/* Guidance Dropdown (Desktop) */}
-          <div ref={dropdownRef} className="relative">
-            <button
-              onClick={() =>
-                setDesktopGuidanceOpen((prev) => !prev)
-              }
-              className={`flex items-center gap-1 ${isGuidanceActive || activeCategory
-                ? linkActive
-                : linkInactive
-                } ${linkBase}`}
-              aria-expanded={desktopGuidanceOpen}
-            >
-              Guidance <span className="text-xs">▾</span>
-            </button>
-
-            {desktopGuidanceOpen && (
-              <div className="absolute left-0 top-full mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-lg p-2">
-                {guidanceCategories.map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    href={`/guidance?category=${cat.slug}`}
-                    onClick={() =>
-                      setDesktopGuidanceOpen(false)
-                    }
-                    className={`block px-4 py-2 rounded-lg ${activeCategory === cat.slug
-                      ? "bg-teal-50 text-teal-700 font-medium"
-                      : "hover:bg-slate-100"
-                      }`}
-                  >
-                    {cat.title}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <Link
-            href="/community"
-            className={`${pathname === "/community" ? linkActive : linkInactive} ${linkBase}`}
-          >
-            Community
-          </Link>
-
-          <Link
-            href="/shop"
-            className={`${pathname === "/shop" ? linkActive : linkInactive} ${linkBase}`}
-          >
-            Shop
-          </Link>
-
-          <Link
-            href="/about"
-            className={`${pathname === "/about" ? linkActive : linkInactive} ${linkBase}`}
-          >
-            About
-          </Link>
-        </nav>
-
-        {/* CTA Desktop */}
-        <div className="hidden md:flex items-center gap-3">
-          {user ? (
-            <>
-              <span className="text-sm text-blue-600">
-                {user.email}
-              </span>
-              <button
-                onClick={logout}
-                className="text-blue-600 hover:text-blue-900 text-sm font-medium transition"
-              >
-                Log Out
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="text-blue-600 hover:text-blue-900 text-sm font-medium transition"
-              >
-                Log In
-              </Link>
-              <Link
-                href="/community"
-                className="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-700 transition"
-              >
-                Join Community
-              </Link>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMobileOpen((prev) => !prev)}
-          className="md:hidden text-blue-700"
-          aria-label="Toggle menu"
-        >
-          ☰
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-blue-200 bg-white">
-          <nav className="px-6 py-4 flex flex-col gap-4 text-sm">
-            {/* Mobile Guidance */}
-            <div>
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-1">
+            {/* Guidance Dropdown (Desktop) */}
+            <div ref={dropdownRef} className="relative">
               <button
                 onClick={() =>
-                  setMobileGuidanceOpen((prev) => !prev)
+                  setDesktopGuidanceOpen((prev) => !prev)
                 }
-                className={`w-full flex justify-between items-center ${isGuidanceActive || activeCategory
-                  ? linkActive
-                  : linkInactive
-                  }`}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-white hover:bg-white/20 transition font-medium"
+                aria-expanded={desktopGuidanceOpen}
               >
-                Guidance <span>▾</span>
+                Guidance
+                <Icons.ChevronDown />
               </button>
 
-              {mobileGuidanceOpen && (
-                <div className="mt-2 ml-4 flex flex-col gap-2">
+              {desktopGuidanceOpen && (
+                <div className="absolute left-0 top-full mt-1 w-60 bg-white border border-slate-200 rounded-xl shadow-xl p-2 z-50">
                   {guidanceCategories.map((cat) => (
                     <Link
                       key={cat.slug}
                       href={`/guidance?category=${cat.slug}`}
-                      onClick={() => {
-                        setMobileOpen(false);
-                        setMobileGuidanceOpen(false);
-                      }}
-                      className={
-                        activeCategory === cat.slug
-                          ? "text-teal-600 font-medium"
-                          : "text-blue-600 hover:text-blue-900"
+                      onClick={() =>
+                        setDesktopGuidanceOpen(false)
                       }
+                      className={`flex items-center gap-2 px-4 py-3 rounded-lg transition ${activeCategory === cat.slug
+                        ? "bg-teal-100 text-teal-700 font-semibold"
+                        : "text-slate-700 hover:bg-slate-100"
+                        }`}
                     >
+                      <span>{cat.icon}</span>
                       {cat.title}
                     </Link>
                   ))}
@@ -205,66 +123,202 @@ export default function Header() {
 
             <Link
               href="/community"
-              onClick={() => setMobileOpen(false)}
-              className={pathname === "/community" ? linkActive : linkInactive}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg transition font-medium ${pathname === "/community"
+                ? "bg-white/20 text-white"
+                : "text-white hover:bg-white/10"
+                }`}
             >
+              <Icons.Users />
               Community
             </Link>
 
             <Link
               href="/shop"
-              onClick={() => setMobileOpen(false)}
-              className={pathname === "/shop" ? linkActive : linkInactive}
+              className={`px-3 py-2 rounded-lg transition font-medium ${pathname === "/shop"
+                ? "bg-white/20 text-white"
+                : "text-white hover:bg-white/10"
+                }`}
             >
               Shop
             </Link>
 
             <Link
               href="/about"
-              onClick={() => setMobileOpen(false)}
-              className={pathname === "/about" ? linkActive : linkInactive}
+              className={`px-3 py-2 rounded-lg transition font-medium ${pathname === "/about"
+                ? "bg-white/20 text-white"
+                : "text-white hover:bg-white/10"
+                }`}
             >
               About
             </Link>
-
-            <div className="mt-4 pt-4 border-t border-blue-200 space-y-2">
-              {user ? (
-                <>
-                  <div className="text-sm text-blue-600 px-4 py-2">
-                    Logged in as: {user.email}
-                  </div>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setMobileOpen(false);
-                    }}
-                    className="w-full text-left text-blue-600 hover:text-blue-900 px-4 py-2"
-                  >
-                    Log Out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="block text-blue-600 hover:text-blue-900 px-4 py-2"
-                  >
-                    Log In
-                  </Link>
-                  <Link
-                    href="/community"
-                    onClick={() => setMobileOpen(false)}
-                    className="block bg-teal-600 text-white px-4 py-2 rounded-lg text-center"
-                  >
-                    Join Community
-                  </Link>
-                </>
-              )}
-            </div>
           </nav>
+
+          {/* Desktop User Section */}
+          <div className="hidden lg:flex items-center gap-4">
+            {user ? (
+              <>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10">
+                  <div className="w-6 h-6 bg-white/30 rounded-full flex items-center justify-center text-sm font-bold text-white">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-sm text-white font-medium truncate max-w-xs">
+                    {user.name}
+                  </span>
+                </div>
+                <button
+                  onClick={logout}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/80 hover:bg-red-600 text-white text-sm font-medium transition"
+                >
+                  <Icons.LogOut />
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 rounded-lg bg-white text-teal-600 font-bold hover:bg-gray-100 transition shadow-lg"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden text-white p-2 hover:bg-white/20 rounded-lg transition"
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <Icons.Close /> : <Icons.Menu />}
+          </button>
         </div>
-      )}
-    </header>
+
+        {/* Mobile Menu */}
+        {mobileOpen && (
+          <div className="lg:hidden bg-teal-700 border-t border-teal-600 p-4 pb-6">
+            <nav className="flex flex-col gap-2">
+              {/* Mobile Guidance */}
+              <div>
+                <button
+                  onClick={() =>
+                    setMobileGuidanceOpen((prev) => !prev)
+                  }
+                  className="w-full flex justify-between items-center px-4 py-3 rounded-lg text-white font-medium hover:bg-teal-600 transition"
+                >
+                  <span>Guidance</span>
+                  <Icons.ChevronDown />
+                </button>
+
+                {mobileGuidanceOpen && (
+                  <div className="mt-2 ml-4 flex flex-col gap-1 bg-teal-600 p-3 rounded-lg">
+                    {guidanceCategories.map((cat) => (
+                      <Link
+                        key={cat.slug}
+                        href={`/guidance?category=${cat.slug}`}
+                        onClick={() => {
+                          setMobileOpen(false);
+                          setMobileGuidanceOpen(false);
+                        }}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg transition ${activeCategory === cat.slug
+                          ? "bg-white text-teal-700 font-semibold"
+                          : "text-white hover:bg-teal-500"
+                          }`}
+                      >
+                        <span>{cat.icon}</span>
+                        {cat.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <Link
+                href="/community"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-2 px-4 py-3 rounded-lg transition font-medium ${pathname === "/community"
+                  ? "bg-white/20 text-white"
+                  : "text-white hover:bg-teal-600"
+                  }`}
+              >
+                <Icons.Users />
+                Community
+              </Link>
+
+              <Link
+                href="/shop"
+                onClick={() => setMobileOpen(false)}
+                className={`px-4 py-3 rounded-lg transition font-medium ${pathname === "/shop"
+                  ? "bg-white/20 text-white"
+                  : "text-white hover:bg-teal-600"
+                  }`}
+              >
+                Shop
+              </Link>
+
+              <Link
+                href="/about"
+                onClick={() => setMobileOpen(false)}
+                className={`px-4 py-3 rounded-lg transition font-medium ${pathname === "/about"
+                  ? "bg-white/20 text-white"
+                  : "text-white hover:bg-teal-600"
+                  }`}
+              >
+                About
+              </Link>
+
+              <div className="mt-4 pt-4 border-t border-teal-600 space-y-2">
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <div className="w-8 h-8 bg-white/30 rounded-full flex items-center justify-center font-bold text-white">
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                      <span className="text-sm text-white font-medium">
+                        {user.name}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMobileOpen(false);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium transition"
+                    >
+                      <Icons.LogOut />
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-4 py-3 rounded-lg text-white font-medium hover:bg-teal-600 transition text-center"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-4 py-3 rounded-lg bg-white text-teal-600 font-bold hover:bg-gray-100 transition text-center"
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                )}
+              </div>
+            </nav>
+          </div>
+        )}
+      </div>
+    </header >
   );
 }
