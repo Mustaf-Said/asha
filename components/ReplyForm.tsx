@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser } from '@/hooks/useUser';
 
@@ -12,6 +13,7 @@ type ReplyFormProps = {
 
 export default function ReplyForm({ discussionId, discussionSlug, onReplyAdded }: ReplyFormProps) {
   const { user } = useUser();
+  const router = useRouter();
   const [replyText, setReplyText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +74,12 @@ export default function ReplyForm({ discussionId, discussionSlug, onReplyAdded }
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(false), 3000);
 
-      // Refresh replies if callback provided
+      // Refresh page to show new reply
+      setTimeout(() => {
+        router.refresh();
+      }, 500);
+
+      // Call callback if provided
       if (onReplyAdded) {
         onReplyAdded();
       }

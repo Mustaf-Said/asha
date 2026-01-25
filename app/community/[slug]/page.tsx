@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ReplyForm from "@/components/ReplyForm";
+import RepliesSection from "@/components/RepliesSection";
 import { getSession } from "@/auth.config";
 import type { Metadata } from "next";
 
@@ -136,46 +137,16 @@ export default async function DiscussionPage({ params }: PageProps) {
           <PortableText value={discussion.content} />
         </div>
 
-        {/* Reply Section */}
-        <ReplyForm discussionId={discussion._id} discussionSlug={discussion.slug} />
+        {/* Replies Section with Toggle */}
+        <RepliesSection
+          replies={discussion.replies}
+          replyCount={discussion.replyCount}
+          user={user}
+        />
 
-        {/* Replies */}
+        {/* Reply Form - at the bottom */}
         <div className="mt-12">
-          <h2 className="text-xl font-semibold text-slate-900 mb-6">
-            Replies ({discussion.replyCount})
-          </h2>
-
-          {!user ? (
-            <div className="text-center py-12 bg-slate-50 rounded-xl border border-slate-200">
-              <p className="text-slate-600 mb-4">Please log in to view replies.</p>
-              <a href="/login" className="inline-block bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition">
-                Log In to View Replies
-              </a>
-            </div>
-          ) : !discussion.replies || discussion.replies.length === 0 ? (
-            <div className="text-center py-12 bg-slate-50 rounded-xl border border-slate-200">
-              <p className="text-slate-600">No replies yet. Be the first to join the discussion!</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {discussion.replies.map((reply) => (
-                <div
-                  key={reply._key}
-                  className="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition"
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="font-semibold text-slate-900">
-                      {reply.author || "Anonymous"}
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      {formatDate(reply.createdAt)}
-                    </span>
-                  </div>
-                  <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{reply.text}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          <ReplyForm discussionId={discussion._id} discussionSlug={discussion.slug} />
         </div>
       </div>
     </article>
