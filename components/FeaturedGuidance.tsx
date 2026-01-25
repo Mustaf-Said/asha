@@ -5,14 +5,14 @@ const featuredGuidance = [
     title: "Career Paths & Specializations in Nursing",
     description:
       "Explore different nursing career paths, specializations, required qualifications, and how to plan your professional growth.",
-    href: "http://localhost:3000/guidance/career-paths",
+    href: "/guidance/career-paths",
     image: "/images/featuredGuinense/guidance-career.png",
   },
   {
     title: "International Nursing: How to Work Abroad as a Nurse",
     description:
       "Explore career paths, job opportunities, CV tips, and long-term professional growth.",
-    href: "http://localhost:3000/guidance/international-nursing",
+    href: "/guidance/international-nursing",
     image: "/images/featuredGuinense/International-Nursing.png",
   },
   {
