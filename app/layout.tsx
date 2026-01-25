@@ -33,7 +33,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Suspense fallback={<div className="h-16 bg-white border-b border-slate-200" />}>
+        <Suspense fallback={<div className="h-16 bg-white border-b border-blue-200" />}>
           <Header />
         </Suspense>
         <main>

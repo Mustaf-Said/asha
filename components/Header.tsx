@@ -46,15 +46,15 @@ export default function Header() {
 
   const linkBase = "transition";
   const linkActive = "text-teal-600 font-medium";
-  const linkInactive = "text-slate-700 hover:text-slate-900";
+  const linkInactive = "text-blue-700 hover:text-blue-900";
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
+    <header className="sticky top-0 z-50 bg-white border-b border-blue-200">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
-          className={`text-lg font-semibold ${pathname === "/" ? linkActive : "text-slate-900"
+          className={`text-lg font-semibold ${pathname === "/" ? linkActive : "text-blue-900"
             }`}
         >
           Nursing Platform
@@ -124,12 +124,12 @@ export default function Header() {
         <div className="hidden md:flex items-center gap-3">
           {user ? (
             <>
-              <span className="text-sm text-slate-600">
+              <span className="text-sm text-blue-600">
                 {user.email}
               </span>
               <button
                 onClick={logout}
-                className="text-slate-600 hover:text-slate-900 text-sm font-medium transition"
+                className="text-blue-600 hover:text-blue-900 text-sm font-medium transition"
               >
                 Log Out
               </button>
@@ -138,7 +138,7 @@ export default function Header() {
             <>
               <Link
                 href="/login"
-                className="text-slate-600 hover:text-slate-900 text-sm font-medium transition"
+                className="text-blue-600 hover:text-blue-900 text-sm font-medium transition"
               >
                 Log In
               </Link>
@@ -155,7 +155,7 @@ export default function Header() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileOpen((prev) => !prev)}
-          className="md:hidden text-slate-700"
+          className="md:hidden text-blue-700"
           aria-label="Toggle menu"
         >
           ☰
@@ -164,7 +164,7 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white">
+        <div className="md:hidden border-t border-blue-200 bg-white">
           <nav className="px-6 py-4 flex flex-col gap-4 text-sm">
             {/* Mobile Guidance */}
             <div>
@@ -193,7 +193,7 @@ export default function Header() {
                       className={
                         activeCategory === cat.slug
                           ? "text-teal-600 font-medium"
-                          : "text-slate-600 hover:text-slate-900"
+                          : "text-blue-600 hover:text-blue-900"
                       }
                     >
                       {cat.title}
@@ -227,10 +227,10 @@ export default function Header() {
               About
             </Link>
 
-            <div className="mt-4 pt-4 border-t border-slate-200 space-y-2">
+            <div className="mt-4 pt-4 border-t border-blue-200 space-y-2">
               {user ? (
                 <>
-                  <div className="text-sm text-slate-600 px-4 py-2">
+                  <div className="text-sm text-blue-600 px-4 py-2">
                     Logged in as: {user.email}
                   </div>
                   <button
@@ -238,7 +238,7 @@ export default function Header() {
                       logout();
                       setMobileOpen(false);
                     }}
-                    className="w-full text-left text-slate-600 hover:text-slate-900 px-4 py-2"
+                    className="w-full text-left text-blue-600 hover:text-blue-900 px-4 py-2"
                   >
                     Log Out
                   </button>
@@ -248,7 +248,7 @@ export default function Header() {
                   <Link
                     href="/login"
                     onClick={() => setMobileOpen(false)}
-                    className="block text-slate-600 hover:text-slate-900 px-4 py-2"
+                    className="block text-blue-600 hover:text-blue-900 px-4 py-2"
                   >
                     Log In
                   </Link>
