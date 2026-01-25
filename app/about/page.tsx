@@ -12,7 +12,7 @@ export default function AboutPage() {
       {/* Hero Section */}
       <section className="bg-linear-to-br from-teal-50 to-slate-50 py-16">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h1 className="text-4xl md:text-5xl font-semibold text-slate-900">
+          <h1 className="text-4xl md:text-5xl font-semibold text-teal-900">
             About Asha
           </h1>
           <p className="mt-4 text-lg text-slate-600">

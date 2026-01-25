@@ -8,7 +8,7 @@ export default function CommunityPreview() {
     <section className="py-20 bg-slate-50">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">
+          <h2 className="text-2xl font-semibold text-teal-900">
             Join a Professional Nursing Community
           </h2>
           <p className="mt-4 text-slate-600">

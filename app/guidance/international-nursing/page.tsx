@@ -69,7 +69,7 @@ export default function InternationalNursing() {
         transition={{ duration: 0.6 }}
         className="max-w-4xl mx-auto"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">International Nursing Guide</h1>
+        <h1 className="text-4xl md:text-5xl font-bold text-teal-900 mb-4">International Nursing Guide</h1>
         <p className="text-lg text-slate-600 mb-12">Plan your move abroad with key requirements, destinations, and practical steps.</p>
       </motion.div>
 
@@ -83,9 +83,9 @@ export default function InternationalNursing() {
           <motion.div
             key={idx}
             variants={itemVariants}
-            className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border-l-4 border-blue-500"
+            className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border-l-4 border-teal-500"
           >
-            <h2 className="text-2xl font-semibold text-slate-900 mb-4">{section.title}</h2>
+            <h2 className="text-2xl font-semibold text-teal-900 mb-4">{section.title}</h2>
             <ul className="space-y-2">
               {section.items.map((item, i) => (
                 <motion.li
@@ -95,7 +95,7 @@ export default function InternationalNursing() {
                   transition={{ delay: i * 0.05 }}
                   className="flex items-start gap-3 text-slate-700"
                 >
-                  <span className="text-blue-500 font-bold mt-1">•</span>
+                  <span className="text-teal-500 font-bold mt-1">•</span>
                   <span>{item}</span>
                 </motion.li>
               ))}

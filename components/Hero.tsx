@@ -6,7 +6,7 @@ export default function Hero() {
   return (
     <section className="bg-linear-to-br from-slate-50 to-teal-50 py-24">
       <div className="max-w-4xl mx-auto px-6 text-center">
-        <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 leading-tight">
+        <h1 className="text-4xl md:text-5xl font-semibold text-teal-900 leading-tight">
           Supporting Nurses & Nursing Students Worldwide
         </h1>
 

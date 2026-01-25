@@ -78,7 +78,7 @@ export default async function CommunityPage({ searchParams }: PageProps) {
           <main className="flex-1">
             <div className=" bg-slate-100 rounded-2xl border border-slate-200 p-6">
               <div className="mb-8 flex items-center justify-between">
-                <h1 className="text-2xl font-semibold text-slate-900">
+                <h1 className="text-2xl font-semibold text-teal-900">
                   Recent Discussions
                 </h1>
                 {user ? (

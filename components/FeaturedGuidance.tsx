@@ -28,7 +28,7 @@ export default function FeaturedGuidance() {
   return (
     <section className="bg-slate-50 py-20">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-2xl font-semibold text-slate-900 mb-10">
+        <h2 className="text-2xl font-semibold text-teal-900 mb-10">
           Featured Guidance
         </h2>
 

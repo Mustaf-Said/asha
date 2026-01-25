@@ -39,7 +39,7 @@ export default function CategoryGrid() {
   return (
     <section className="py-20">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-2xl font-semibold text-slate-900 mb-10">
+        <h2 className="text-2xl font-semibold text-teal-900 mb-10">
           Explore Guidance Areas
         </h2>
 
@@ -48,10 +48,10 @@ export default function CategoryGrid() {
             <Link
               key={cat.slug}
               href={`/guidance?category=${cat.slug}`}
-              className="group rounded-xl border border-slate-200 p-6 bg-white hover:shadow-md transition block"
+              className="group rounded-xl border border-teal-200 p-6 bg-white hover:shadow-md transition block"
             >
               {/* Image */}
-              <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-slate-100">
+              <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-teal-100">
                 <Image
                   src={cat.image}
                   alt={cat.title}
@@ -63,10 +63,10 @@ export default function CategoryGrid() {
 
 
               {/* Text */}
-              <h3 className="text-lg font-medium text-slate-900">
+              <h3 className="text-lg font-medium text-teal-900">
                 {cat.title}
               </h3>
-              <p className="mt-2 text-slate-600 text-sm">
+              <p className="mt-2 text-teal-600 text-sm">
                 {cat.description}
               </p>
             </Link>
