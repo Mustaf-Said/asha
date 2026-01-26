@@ -11,14 +11,15 @@ export default async function HomePage({
 }) {
   const resolvedSearchParams = await searchParams;
   const lang = resolvedSearchParams?.lang || 'en';
+  const isRTL = lang === 'ar';
 
   return (
-    <>
+    <div dir={isRTL ? 'rtl' : 'ltr'} className={isRTL ? 'text-right' : 'text-left'}>
       <Hero lang={lang} />
       <CategoryGrid lang={lang} />
       <FeaturedGuidance lang={lang} />
       <CommunityPreview lang={lang} />
       <AuthoritySection lang={lang} />
-    </>
+    </div>
   );
 }

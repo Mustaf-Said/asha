@@ -187,7 +187,7 @@ export default function Header() {
                   <Link
                     key={lang.code}
                     href={buildLangHref(lang.code)}
-                    className={`px-3 py-1 rounded-full transition ${isActive
+                    className={`px-3 py-1 rounded-full transition-all duration-300 ease-in-out ${isActive
                       ? "bg-white text-teal-600 shadow"
                       : "hover:bg-white/20"
                       }`}
@@ -256,7 +256,7 @@ export default function Header() {
                       key={lang.code}
                       href={buildLangHref(lang.code)}
                       onClick={() => setMobileOpen(false)}
-                      className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition ${isActive
+                      className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${isActive
                         ? "bg-white text-teal-700 shadow"
                         : "bg-teal-600 text-white hover:bg-teal-500"
                         }`}

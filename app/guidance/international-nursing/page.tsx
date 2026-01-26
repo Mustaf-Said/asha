@@ -8,6 +8,7 @@ export default function InternationalNursing() {
   const searchParams = useSearchParams();
   const lang = searchParams?.get('lang') || 'en';
   const { t } = useTranslations(lang);
+  const isRTL = lang === 'ar';
 
   const parseItems = (itemString: string): string[] => {
     return itemString.split('|').map(item => item.trim());
@@ -64,7 +65,10 @@ export default function InternationalNursing() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 to-blue-50 py-12 px-4">
+    <div
+      dir={isRTL ? 'rtl' : 'ltr'}
+      className={`min-h-screen bg-linear-to-br from-slate-50 to-blue-50 py-12 px-4 ${isRTL ? 'text-right' : 'text-left'}`}
+    >
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
