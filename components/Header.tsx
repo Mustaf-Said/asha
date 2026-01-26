@@ -274,9 +274,12 @@ export default function Header() {
                     setMobileGuidanceOpen((prev) => !prev)
                   }
                   className="w-full flex justify-between items-center px-4 py-3 rounded-lg text-white font-medium hover:bg-teal-600 transition"
+                  aria-expanded={mobileGuidanceOpen}
                 >
                   <span>{t('guidance')}</span>
-                  <Icons.ChevronDown />
+                  <span className={`transition-transform duration-200 ${mobileGuidanceOpen ? 'rotate-180' : ''}`}>
+                    <Icons.ChevronDown />
+                  </span>
                 </button>
 
                 {mobileGuidanceOpen && (
