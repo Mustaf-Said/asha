@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+
 export const metadata: Metadata = {
   title: "About Asha | Professional Nursing Platform",
   description: "Learn about Asha - a Senior Staff Nurse with 16+ years of experience dedicated to supporting nurses worldwide.",
 };
 
-export default function AboutPage() {
+type AboutPageProps = {
+  searchParams?: Promise<{ lang?: string }>;
+};
+
+export default async function AboutPage({ searchParams }: AboutPageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const lang = resolvedSearchParams?.lang || 'en';
+
+  // For now, the About page content remains in English
+  // You can add translations later if needed
   return (
     <div>
       {/* Hero Section */}

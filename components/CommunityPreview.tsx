@@ -2,21 +2,23 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "@/lib/translations";
 
-export default function CommunityPreview() {
+export default function CommunityPreview({ lang }: { lang?: string }) {
+  const { t } = useTranslations(lang);
+
   return (
     <section className="py-20 bg-slate-50">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
         <div>
           <h2 className="text-2xl font-semibold text-teal-900">
-            Join a Professional Nursing Community
+            {t('communityPreviewTitle')}
           </h2>
           <p className="mt-4 text-slate-600">
-            Ask questions, share experiences, and learn from nurses worldwide in
-            a respectful, professional space.
+            {t('communityPreviewDesc')}
           </p>
-          <Link href="/community" className="inline-block mt-6 bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition">
-            Join Community
+          <Link href={`/community${lang && lang !== 'en' ? `?lang=${lang}` : ''}`} className="inline-block mt-6 bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition">
+            {t('joinCommunity')}
           </Link>
         </div>
 

@@ -1,45 +1,46 @@
 'use client';
 
 import { motion } from 'framer-motion';
-
-const sections = [
-  {
-    title: 'Introduction',
-    items: [
-      'Why nursing offers diverse career paths',
-      'How career planning supports long-term satisfaction',
-    ],
-  },
-  {
-    title: 'Why Choosing the Right Career Path Matters',
-    items: ['Job satisfaction', 'Work-life balance', 'Professional growth', 'Avoiding burnout'],
-  },
-  {
-    title: 'Common Nursing Career Paths',
-    items: [
-      'Staff Nurse',
-      'Specialist Nurse (ICU, Mental Health, Pediatrics)',
-      'Nurse Educator',
-      'Nurse Manager / Leader',
-      'Research Nurse',
-      'Advanced Practice Nurse',
-    ],
-  },
-  {
-    title: 'Education & Requirements',
-    items: ['Basic nursing qualifications', 'Additional certifications', 'Continuing education', 'Clinical experience'],
-  },
-  {
-    title: 'How to Choose the Right Path for You',
-    items: ['Interests and strengths', 'Work environment preferences', 'Long-term goals', 'Lifestyle considerations'],
-  },
-  {
-    title: 'Career Development Tips',
-    items: ['Networking', 'Mentorship', 'Skills development', 'Staying updated in healthcare'],
-  },
-];
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from '@/lib/translations';
 
 export default function CareerPaths() {
+  const searchParams = useSearchParams();
+  const lang = searchParams?.get('lang') || 'en';
+
+  const { t } = useTranslations(lang);
+
+  const parseItems = (itemString: string): string[] => {
+    return itemString.split('|').map(item => item.trim());
+  };
+
+  const sections = [
+    {
+      title: t('careerPathsIntroTitle'),
+      items: parseItems(t('careerPathsIntroItems')),
+    },
+    {
+      title: t('careerPathsWhyTitle'),
+      items: parseItems(t('careerPathsWhyItems')),
+    },
+    {
+      title: t('careerPathsCommonTitle'),
+      items: parseItems(t('careerPathsCommonItems')),
+    },
+    {
+      title: t('careerPathsEducationTitle'),
+      items: parseItems(t('careerPathsEducationItems')),
+    },
+    {
+      title: t('careerPathsChooseTitle'),
+      items: parseItems(t('careerPathsChooseItems')),
+    },
+    {
+      title: t('careerPathsDevelopmentTitle'),
+      items: parseItems(t('careerPathsDevelopmentItems')),
+    },
+  ];
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -54,15 +55,15 @@ export default function CareerPaths() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-blue-50 py-12 px-4">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="max-w-4xl mx-auto"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-teal-900 mb-4">Nursing Career Paths</h1>
-        <p className="text-lg text-slate-600 mb-12">Explore diverse opportunities and find your ideal career trajectory</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-teal-900 mb-4">{t('careerPathsPageTitle')}</h1>
+        <p className="text-lg text-slate-600 mb-12">{t('careerPathsPageDesc')}</p>
       </motion.div>
 
       <motion.div
@@ -96,11 +97,11 @@ export default function CareerPaths() {
         ))}
 
         <motion.div variants={itemVariants} className="bg-blue-100 rounded-lg p-6 mt-12">
-          <h3 className="text-xl font-semibold text-blue-900 mb-3">Next Steps</h3>
+          <h3 className="text-xl font-semibold text-blue-900 mb-3">{t('careerPathsNextTitle')}</h3>
           <ul className="space-y-2 text-blue-800">
-            <li>✓ Reflect on your goals and interests</li>
-            <li>✓ Explore specializations in detail</li>
-            <li>✓ Connect with community discussions</li>
+            {parseItems(t('careerPathsNextItems')).map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
           </ul>
         </motion.div>
       </motion.div>

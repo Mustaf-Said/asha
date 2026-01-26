@@ -7,6 +7,7 @@ import {
   categoriesQuery,
   articlesByCategoryQuery,
 } from "@/lib/queries";
+import { normalizeLang, resolveArticleLocalization } from "@/lib/i18n";
 
 /* -----------------------------
    TYPES (searchParams IS A PROMISE)
@@ -14,6 +15,7 @@ import {
 type GuidancePageProps = {
   searchParams?: Promise<{
     category?: string;
+    lang?: string;
   }>;
 };
 
@@ -21,6 +23,10 @@ interface Article {
   _id: string;
   title: string;
   excerpt: string;
+  title_so?: string;
+  title_ar?: string;
+  excerpt_so?: string;
+  excerpt_ar?: string;
   mainImage?: any;
   category: {
     title: string;
@@ -38,6 +44,7 @@ export default async function GuidancePage({
     : undefined;
 
   const activeCategory = resolvedSearchParams?.category;
+  const lang = normalizeLang(resolvedSearchParams?.lang);
 
   const [articles, categories] = await Promise.all([
     sanityClient.fetch(articlesByCategoryQuery, {
@@ -56,16 +63,19 @@ export default async function GuidancePage({
 
 
           <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.map((article: Article) => (
-              <GuidanceCard
-                key={article._id}
-                title={article.title}
-                excerpt={article.excerpt}
-                category={article.category.title}
-                slug={article.slug}
-                mainImage={article.mainImage}
-              />
-            ))}
+            {articles.map((article: Article) => {
+              const localized = resolveArticleLocalization(article, lang);
+              return (
+                <GuidanceCard
+                  key={article._id}
+                  title={localized.localizedTitle || article.title}
+                  excerpt={localized.localizedExcerpt || article.excerpt}
+                  category={article.category.title}
+                  slug={article.slug}
+                  mainImage={article.mainImage}
+                />
+              );
+            })}
           </div>
         </div>
       </section>

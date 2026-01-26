@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
+import { useTranslations } from "@/lib/translations";
 
 const guidanceCategories = [
   { title: "Nursing Students", slug: "nursing-students", icon: "👨‍🎓" },
@@ -53,6 +54,8 @@ export default function Header() {
   const { user, logout } = useUser();
 
   const activeCategory = searchParams.get("category");
+  const activeLang = searchParams.get("lang") || "en";
+  const { t } = useTranslations(activeLang);
   const isGuidanceActive = pathname === "/guidance";
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -76,8 +79,25 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const languages = [
+    { code: "en", label: "English" },
+    { code: "so", label: "Somali" },
+    { code: "ar", label: "Arabic" },
+  ];
+
+  const buildLangHref = (code: string) => {
+    const params = new URLSearchParams(searchParams?.toString());
+    if (code === "en") {
+      params.delete("lang");
+    } else {
+      params.set("lang", code);
+    }
+    const qs = params.toString();
+    return qs ? `${pathname}?${qs}` : pathname;
+  };
+
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-teal-600 via-teal-500 to-cyan-500 shadow-lg border-b border-teal-700">
+    <header className="sticky top-0 z-50 bg-linear-to-r from-teal-600 via-teal-500 to-cyan-500 shadow-lg border-b border-teal-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -100,7 +120,7 @@ export default function Header() {
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-white hover:bg-white/20 transition font-medium"
                 aria-expanded={desktopGuidanceOpen}
               >
-                Guidance
+                {t('guidance')}
                 <Icons.ChevronDown />
               </button>
 
@@ -109,7 +129,7 @@ export default function Header() {
                   {guidanceCategories.map((cat) => (
                     <Link
                       key={cat.slug}
-                      href={`/guidance?category=${cat.slug}`}
+                      href={`/guidance?category=${cat.slug}${activeLang !== 'en' ? `&lang=${activeLang}` : ''}`}
                       onClick={() =>
                         setDesktopGuidanceOpen(false)
                       }
@@ -127,39 +147,57 @@ export default function Header() {
             </div>
 
             <Link
-              href="/community"
+              href={`/community${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg transition font-medium ${pathname === "/community"
                 ? "bg-white/20 text-white"
                 : "text-white hover:bg-white/10"
                 }`}
             >
               <Icons.Users />
-              Community
+              {t('community')}
             </Link>
 
             <Link
-              href="/shop"
+              href={`/shop${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
               className={`px-3 py-2 rounded-lg transition font-medium ${pathname === "/shop"
                 ? "bg-white/20 text-white"
                 : "text-white hover:bg-white/10"
                 }`}
             >
-              Shop
+              {t('shop')}
             </Link>
 
             <Link
-              href="/about"
+              href={`/about${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
               className={`px-3 py-2 rounded-lg transition font-medium ${pathname === "/about"
                 ? "bg-white/20 text-white"
                 : "text-white hover:bg-white/10"
                 }`}
             >
-              About
+              {t('about')}
             </Link>
           </nav>
 
-          {/* Desktop User Section */}
+          {/* Desktop Lang Switch + User Section */}
           <div className="hidden lg:flex items-center gap-4">
+            <div className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 text-xs font-medium text-white">
+              {languages.map((lang) => {
+                const isActive = activeLang === lang.code || (!searchParams.get("lang") && lang.code === "en");
+                return (
+                  <Link
+                    key={lang.code}
+                    href={buildLangHref(lang.code)}
+                    className={`px-3 py-1 rounded-full transition ${isActive
+                      ? "bg-white text-teal-600 shadow"
+                      : "hover:bg-white/20"
+                      }`}
+                  >
+                    {lang.label}
+                  </Link>
+                );
+              })}
+            </div>
+
             {user ? (
               <>
                 <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10">
@@ -175,7 +213,7 @@ export default function Header() {
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/80 hover:bg-red-600 text-white text-sm font-medium transition"
                 >
                   <Icons.LogOut />
-                  Sign Out
+                  {t('signOut')}
                 </button>
               </>
             ) : (
@@ -184,13 +222,13 @@ export default function Header() {
                   href="/login"
                   className="px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition"
                 >
-                  Sign In
+                  {t('signIn')}
                 </Link>
                 <Link
                   href="/login"
                   className="px-4 py-2 rounded-lg bg-white text-teal-600 font-bold hover:bg-gray-100 transition shadow-lg"
                 >
-                  Get Started
+                  {t('getStarted')}
                 </Link>
               </>
             )}
@@ -210,6 +248,25 @@ export default function Header() {
         {mobileOpen && (
           <div className="lg:hidden bg-teal-700 border-t border-teal-600 p-4 pb-6">
             <nav className="flex flex-col gap-2">
+              <div className="flex gap-2 mb-3">
+                {languages.map((lang) => {
+                  const isActive = activeLang === lang.code || (!searchParams.get("lang") && lang.code === "en");
+                  return (
+                    <Link
+                      key={lang.code}
+                      href={buildLangHref(lang.code)}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition ${isActive
+                        ? "bg-white text-teal-700 shadow"
+                        : "bg-teal-600 text-white hover:bg-teal-500"
+                        }`}
+                    >
+                      {lang.label}
+                    </Link>
+                  );
+                })}
+              </div>
+
               {/* Mobile Guidance */}
               <div>
                 <button
@@ -218,7 +275,7 @@ export default function Header() {
                   }
                   className="w-full flex justify-between items-center px-4 py-3 rounded-lg text-white font-medium hover:bg-teal-600 transition"
                 >
-                  <span>Guidance</span>
+                  <span>{t('guidance')}</span>
                   <Icons.ChevronDown />
                 </button>
 
@@ -227,7 +284,7 @@ export default function Header() {
                     {guidanceCategories.map((cat) => (
                       <Link
                         key={cat.slug}
-                        href={`/guidance?category=${cat.slug}`}
+                        href={`/guidance?category=${cat.slug}${activeLang !== 'en' ? `&lang=${activeLang}` : ''}`}
                         onClick={() => {
                           setMobileOpen(false);
                           setMobileGuidanceOpen(false);
@@ -246,7 +303,7 @@ export default function Header() {
               </div>
 
               <Link
-                href="/community"
+                href={`/community${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-2 px-4 py-3 rounded-lg transition font-medium ${pathname === "/community"
                   ? "bg-white/20 text-white"
@@ -254,29 +311,29 @@ export default function Header() {
                   }`}
               >
                 <Icons.Users />
-                Community
+                {t('community')}
               </Link>
 
               <Link
-                href="/shop"
+                href={`/shop${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
                 onClick={() => setMobileOpen(false)}
                 className={`px-4 py-3 rounded-lg transition font-medium ${pathname === "/shop"
                   ? "bg-white/20 text-white"
                   : "text-white hover:bg-teal-600"
                   }`}
               >
-                Shop
+                {t('shop')}
               </Link>
 
               <Link
-                href="/about"
+                href={`/about${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
                 onClick={() => setMobileOpen(false)}
                 className={`px-4 py-3 rounded-lg transition font-medium ${pathname === "/about"
                   ? "bg-white/20 text-white"
                   : "text-white hover:bg-teal-600"
                   }`}
               >
-                About
+                {t('about')}
               </Link>
 
               <div className="mt-4 pt-4 border-t border-teal-600 space-y-2">
@@ -298,7 +355,7 @@ export default function Header() {
                       className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium transition"
                     >
                       <Icons.LogOut />
-                      Sign Out
+                      {t('signOut')}
                     </button>
                   </>
                 ) : (
@@ -308,14 +365,14 @@ export default function Header() {
                       onClick={() => setMobileOpen(false)}
                       className="block px-4 py-3 rounded-lg text-white font-medium hover:bg-teal-600 transition text-center"
                     >
-                      Sign In
+                      {t('signIn')}
                     </Link>
                     <Link
                       href="/login"
                       onClick={() => setMobileOpen(false)}
                       className="block px-4 py-3 rounded-lg bg-white text-teal-600 font-bold hover:bg-gray-100 transition text-center"
                     >
-                      Get Started
+                      {t('getStarted')}
                     </Link>
                   </>
                 )}

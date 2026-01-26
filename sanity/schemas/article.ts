@@ -28,6 +28,34 @@ export default defineType({
       rows: 3,
     }),
 
+    // Translated titles & excerpts
+    defineField({
+      name: "title_so",
+      title: "Title (Somali)",
+      type: "string",
+      description: "Automatically translated from English; editors can adjust.",
+    }),
+    defineField({
+      name: "title_ar",
+      title: "Title (Arabic)",
+      type: "string",
+      description: "Automatically translated from English; editors can adjust.",
+    }),
+    defineField({
+      name: "excerpt_so",
+      title: "Excerpt (Somali)",
+      type: "text",
+      rows: 3,
+      description: "Automatically translated from English; editors can adjust.",
+    }),
+    defineField({
+      name: "excerpt_ar",
+      title: "Excerpt (Arabic)",
+      type: "text",
+      rows: 3,
+      description: "Automatically translated from English; editors can adjust.",
+    }),
+
     // ✅ ADD THIS
     defineField({
       name: "mainImage",
@@ -51,6 +79,32 @@ export default defineType({
       title: "Content",
       type: "array",
       of: [{ type: "block" }],
+    }),
+
+    // Auto-translated content fields
+    defineField({
+      name: "soContent",
+      title: "Somali Content",
+      type: "array",
+      of: [{ type: "block" }],
+      description: "Automatically translated from English; editors can adjust.",
+    }),
+    defineField({
+      name: "arContent",
+      title: "Arabic Content",
+      type: "array",
+      of: [{ type: "block" }],
+      description: "Automatically translated from English; editors can adjust.",
+    }),
+
+    defineField({
+      name: "translationMeta",
+      title: "Translation Metadata",
+      type: "object",
+      fields: [
+        defineField({ name: "autoTranslatedAt", title: "Auto Translated At", type: "datetime" }),
+        defineField({ name: "sourceLang", title: "Source Language", type: "string" }),
+      ],
     }),
 
     defineField({

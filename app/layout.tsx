@@ -39,7 +39,9 @@ export default async function RootLayout({
         <main>
           {children}
         </main>
-        <Footer />
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
       </body>
     </html>
   );

@@ -49,6 +49,17 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
 # Optional - For draft preview
 SANITY_API_READ_TOKEN=
 SANITY_PREVIEW_SECRET=
+
+# Auto-translation (Azure Translator)
+AZURE_TRANSLATOR_KEY=your-azure-key
+# Optional
+AZURE_TRANSLATOR_REGION=westeurope
+AZURE_TRANSLATOR_ENDPOINT=https://api.cognitive.microsofttranslator.com
+# Sanity write token (needed to save translations)
+SANITY_API_WRITE_TOKEN=your-sanity-write-token
+
+# Local dev fallback (no external API)
+DEV_TRANSLATION_FAKE=true
 ```
 
 ## Development Workflow
@@ -366,6 +377,25 @@ rm -rf .next
 # Rebuild
 npm run build
 ```
+
+## Auto-Translation Webhook
+
+To auto-translate articles from English to Somali and Arabic:
+
+- Create a Sanity webhook in your project settings pointing to:
+  - `POST /api/articles/translate`
+  - Trigger on document type: `article`
+  - Events: `create` and `update`
+  - Deliver minimal payload including `_id`
+
+The server will:
+
+- Fetch the article's English `content`
+- Translate to `so` and `ar` if `soContent`/`arContent` are missing
+- Save translated blocks into the same document
+- Set `translationMeta.autoTranslatedAt`
+
+Editors can adjust translated fields in Sanity Studio.
 
 ## Production Checklist
 

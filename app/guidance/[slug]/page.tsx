@@ -6,6 +6,7 @@ import { PortableText } from "@portabletext/react";
 import { relatedArticlesQuery } from "@/lib/queries";
 import Image from "next/image";
 import { urlFor } from "@/lib/sanity.image";
+import { normalizeLang, resolveArticleLocalization } from "@/lib/i18n";
 
 import type { Metadata } from "next";
 
@@ -15,6 +16,10 @@ type RelatedArticle = {
   slug: string;
   title: string;
   excerpt?: string;
+  title_so?: string;
+  title_ar?: string;
+  excerpt_so?: string;
+  excerpt_ar?: string;
 };
 
 /* -----------------------------
@@ -24,15 +29,20 @@ type PageProps = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams?: Promise<{
+    lang?: string;
+  }>;
 };
 
 /* -----------------------------
    SEO METADATA
 ----------------------------- */
 export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> }
+  { params, searchParams }: { params: Promise<{ slug: string }>; searchParams?: Promise<{ lang?: string }> }
 ): Promise<Metadata> {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const lang = normalizeLang(resolvedSearchParams?.lang);
 
   const article = await sanityClient.fetch(articleBySlugQuery, {
     slug,
@@ -42,12 +52,14 @@ export async function generateMetadata(
     return {};
   }
 
+  const localized = resolveArticleLocalization(article, lang);
+
   return {
-    title: article.title,
-    description: article.excerpt,
+    title: localized.localizedTitle || article.title,
+    description: localized.localizedExcerpt || article.excerpt,
     openGraph: {
-      title: article.title,
-      description: article.excerpt,
+      title: localized.localizedTitle || article.title,
+      description: localized.localizedExcerpt || article.excerpt,
       images: [`/guidance/${slug}/opengraph-image`],
     },
   };
@@ -57,8 +69,10 @@ export async function generateMetadata(
 /* -----------------------------
    PAGE
 ----------------------------- */
-export default async function ArticlePage({ params }: PageProps) {
+export default async function ArticlePage({ params, searchParams }: PageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const lang = normalizeLang(resolvedSearchParams?.lang);
 
   const article = await sanityClient.fetch(articleBySlugQuery, {
     slug,
@@ -76,6 +90,8 @@ export default async function ArticlePage({ params }: PageProps) {
     }
   );
 
+  const localized = resolveArticleLocalization(article, lang);
+
 
   return (
     <article className="pt-6 pb-16">
@@ -88,7 +104,7 @@ export default async function ArticlePage({ params }: PageProps) {
               label: article.category.title,
               href: `/guidance?category=${article.category.slug}`,
             },
-            { label: article.title },
+            { label: localized.localizedTitle || article.title },
           ]}
         />
 
@@ -100,12 +116,12 @@ export default async function ArticlePage({ params }: PageProps) {
         </span>
 
         <h1 className="mt-4 text-3xl md:text-4xl font-semibold text-teal-900 leading-tight">
-          {article.title}
+          {localized.localizedTitle || article.title}
         </h1>
 
-        {article.excerpt && (
+        {localized.localizedExcerpt && (
           <p className="mt-4 text-lg text-slate-600 max-w-2xl">
-            {article.excerpt}
+            {localized.localizedExcerpt}
           </p>
         )}
 
@@ -113,7 +129,7 @@ export default async function ArticlePage({ params }: PageProps) {
           <div className="mt-10 rounded-xl overflow-hidden shadow-md">
             <Image
               src={urlFor(article.mainImage).width(800).url()}
-              alt={article.title}
+              alt={localized.localizedTitle || article.title}
               width={800}
               height={400}
               priority
@@ -123,7 +139,7 @@ export default async function ArticlePage({ params }: PageProps) {
         )}
 
         <div className="prose prose-slate max-w-none mt-10">
-          <PortableText value={article.content} />
+          <PortableText value={localized.localizedContent || article.content} />
         </div>
       </div>
       {relatedArticles.length > 0 && (
@@ -133,27 +149,30 @@ export default async function ArticlePage({ params }: PageProps) {
           </h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {relatedArticles.map((item: RelatedArticle) => (
-              <a
-                key={item._id}
-                href={`/guidance/${item.slug}`}
-                className="block border border-slate-200 rounded-xl p-5 hover:shadow-md transition"
-              >
-                <h3 className="font-medium text-slate-900">
-                  {item.title}
-                </h3>
+            {relatedArticles.map((item: RelatedArticle) => {
+              const localizedRelated = resolveArticleLocalization(item, lang);
+              return (
+                <a
+                  key={item._id}
+                  href={`/guidance/${item.slug}`}
+                  className="block border border-slate-200 rounded-xl p-5 hover:shadow-md transition"
+                >
+                  <h3 className="font-medium text-slate-900">
+                    {localizedRelated.localizedTitle || item.title}
+                  </h3>
 
-                {item.excerpt && (
-                  <p className="mt-2 text-sm text-slate-600">
-                    {item.excerpt}
-                  </p>
-                )}
+                  {localizedRelated.localizedExcerpt && (
+                    <p className="mt-2 text-sm text-slate-600">
+                      {localizedRelated.localizedExcerpt}
+                    </p>
+                  )}
 
-                <span className="mt-4 inline-block text-sm text-teal-600 font-medium">
-                  Read more →
-                </span>
-              </a>
-            ))}
+                  <span className="mt-4 inline-block text-sm text-teal-600 font-medium">
+                    Read more →
+                  </span>
+                </a>
+              );
+            })}
           </div>
         </section>
       )}

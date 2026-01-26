@@ -1,42 +1,44 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "@/lib/translations";
 
 const featuredGuidance = [
   {
-    title: "Career Paths & Specializations in Nursing",
-    description:
-      "Explore different nursing career paths, specializations, required qualifications, and how to plan your professional growth.",
+    titleKey: "careerPathsTitle" as const,
+    descKey: "careerPathsDesc" as const,
     href: "/guidance/career-paths",
     image: "/images/featuredGuinense/guidance-career.png",
   },
   {
-    title: "International Nursing: How to Work Abroad as a Nurse",
-    description:
-      "Explore career paths, job opportunities, CV tips, and long-term professional growth.",
+    titleKey: "internationalArticleTitle" as const,
+    descKey: "internationalArticleDesc" as const,
     href: "/guidance/international-nursing",
     image: "/images/featuredGuinense/International-Nursing.png",
   },
   {
-    title: "Burnout Prevention & Wellbeing for Nurses",
-    description:
-      "Learn how to recognize burnout, manage stress, and build a sustainable nursing career without sacrificing your wellbeing.",
+    titleKey: "wellbeingArticleTitle" as const,
+    descKey: "wellbeingArticleDesc" as const,
     href: "/guidance/wellbeing",
     image: "/images/featuredGuinense/guidance-wellbeing.png",
   },
 ];
 
-export default function FeaturedGuidance() {
+export default function FeaturedGuidance({ lang }: { lang?: string }) {
+  const { t } = useTranslations(lang);
+
   return (
     <section className="bg-slate-50 py-20">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-2xl font-semibold text-teal-900 mb-10">
-          Featured Guidance
+          {t('featuredGuidanceTitle')}
         </h2>
 
         <div className="grid gap-6 md:grid-cols-3">
           {featuredGuidance.map((item) => (
             <Link
-              key={item.title}
-              href={item.href}
+              key={item.href}
+              href={`${item.href}${lang && lang !== 'en' ? `?lang=${lang}` : ''}`}
               target="_blank"
               className="group relative h-[320px] rounded-2xl overflow-hidden border border-slate-200"
             >
@@ -52,10 +54,10 @@ export default function FeaturedGuidance() {
               {/* Content */}
               <div className="relative h-full p-6 flex flex-col justify-end">
                 <h3 className="text-lg font-semibold text-white">
-                  {item.title}
+                  {t(item.titleKey)}
                 </h3>
                 <p className="mt-2 text-sm text-slate-200 leading-relaxed">
-                  {item.description}
+                  {t(item.descKey)}
                 </p>
 
                 <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-teal-300">

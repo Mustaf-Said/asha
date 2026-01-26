@@ -1,6 +1,16 @@
-import Link from 'next/link';
+"use client";
 
-export default function Footer() {
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from '@/lib/translations';
+
+export default function Footer({ lang: langProp }: { lang?: string } = {}) {
+  const searchParams = useSearchParams();
+  const lang = langProp || searchParams?.get('lang') || 'en';
+  const { t } = useTranslations(lang);
+  const langParam = lang && lang !== 'en' ? `?lang=${lang}` : '';
+  const langParamCategory = lang && lang !== 'en' ? `&lang=${lang}` : '';
+
   return (
     <footer className="bg-slate-900 text-slate-300">
       <div className="max-w-6xl mx-auto px-6 py-16 grid gap-10 md:grid-cols-4">
@@ -8,49 +18,48 @@ export default function Footer() {
         {/* Brand / Mission */}
         <div>
           <h3 className="text-white font-semibold text-lg">
-            Nursing Platform
+            {t('footerBrandTitle')}
           </h3>
           <p className="mt-4 text-sm text-slate-400 leading-relaxed">
-            Supporting nurses and nursing students worldwide with professional
-            guidance, leadership support, and a trusted community.
+            {t('footerBrandDesc')}
           </p>
         </div>
 
         {/* Guidance */}
         <div>
           <h4 className="text-white font-medium mb-4">
-            Guidance
+            {t('footerGuidance')}
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guidance?category=nursing-students" className="hover:text-white">Nursing Students</Link></li>
-            <li><Link href="/guidance?category=career-development" className="hover:text-white">Career Development</Link></li>
-            <li><Link href="/guidance?category=leadership" className="hover:text-white">Leadership</Link></li>
-            <li><Link href="/guidance?category=wellbeing" className="hover:text-white">Wellbeing</Link></li>
-            <li><Link href="/guidance?category=international-nursing" className="hover:text-white">International Nursing</Link></li>
+            <li><Link href={`/guidance?category=nursing-students${langParamCategory}`} className="hover:text-white">{t('nursingStudents')}</Link></li>
+            <li><Link href={`/guidance?category=career-development${langParamCategory}`} className="hover:text-white">{t('careerDevelopment')}</Link></li>
+            <li><Link href={`/guidance?category=leadership${langParamCategory}`} className="hover:text-white">{t('leadership')}</Link></li>
+            <li><Link href={`/guidance?category=wellbeing${langParamCategory}`} className="hover:text-white">{t('wellbeing')}</Link></li>
+            <li><Link href={`/guidance?category=international-nursing${langParamCategory}`} className="hover:text-white">{t('internationalNursing')}</Link></li>
           </ul>
         </div>
 
         {/* Community */}
         <div>
           <h4 className="text-white font-medium mb-4">
-            Community
+            {t('footerCommunity')}
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/community" className="hover:text-white">Join the Community</Link></li>
-            <li><Link href="/community/rules" className="hover:text-white">Community Guidelines</Link></li>
-            <li><Link href="/about" className="hover:text-white">About the Founder</Link></li>
+            <li><Link href={`/community${langParam}`} className="hover:text-white">{t('footerJoinCommunity')}</Link></li>
+            <li><Link href={`/community/rules${langParam}`} className="hover:text-white">{t('footerCommunityGuidelines')}</Link></li>
+            <li><Link href={`/about${langParam}`} className="hover:text-white">{t('footerAboutFounder')}</Link></li>
           </ul>
         </div>
 
         {/* Legal */}
         <div>
           <h4 className="text-white font-medium mb-4">
-            Legal
+            {t('footerLegal')}
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:text-white">Disclaimer</a></li>
-            <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-white">Terms & Conditions</a></li>
+            <li><a href="#" className="hover:text-white">{t('footerDisclaimer')}</a></li>
+            <li><a href="#" className="hover:text-white">{t('footerPrivacy')}</a></li>
+            <li><a href="#" className="hover:text-white">{t('footerTerms')}</a></li>
           </ul>
         </div>
       </div>
@@ -59,10 +68,10 @@ export default function Footer() {
       <div className="border-t border-slate-800">
         <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between text-sm text-slate-500">
           <p>
-            © {new Date().getFullYear()} Nursing Platform. All rights reserved.
+            © {new Date().getFullYear()} {t('footerCopyright')}
           </p>
           <p className="mt-2 md:mt-0">
-            Educational content only – not medical advice.
+            {t('footerEducational')}
           </p>
         </div>
       </div>

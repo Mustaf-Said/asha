@@ -18,7 +18,11 @@ export const articlesQuery = groq`
   *[_type == "article"] | order(publishedAt desc) {
     _id,
     title,
+    title_so,
+    title_ar,
     excerpt,
+    excerpt_so,
+    excerpt_ar,
     mainImage,
     publishedAt,
     "slug": slug.current,
@@ -32,8 +36,14 @@ export const articlesQuery = groq`
 export const articleBySlugQuery = groq`
   *[_type == "article" && slug.current == $slug][0] {
     title,
+    title_so,
+    title_ar,
     excerpt,
+    excerpt_so,
+    excerpt_ar,
     content,
+    soContent,
+    arContent,
     mainImage,
     seoTitle,
     seoDescription,
@@ -53,7 +63,11 @@ export const relatedArticlesQuery = groq`
   ][0...3] {
     _id,
     title,
+    title_so,
+    title_ar,
     excerpt,
+    excerpt_so,
+    excerpt_ar,
     "slug": slug.current
   }
 `;
@@ -65,7 +79,11 @@ export const articlesByCategoryQuery = groq`
   ] | order(publishedAt desc) {
     _id,
     title,
+    title_so,
+    title_ar,
     excerpt,
+    excerpt_so,
+    excerpt_ar,
     mainImage,
     publishedAt,
     "slug": slug.current,

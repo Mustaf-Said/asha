@@ -1,53 +1,55 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const sections = [
-  {
-    title: "Introduction",
-    items: [
-      "Growing global demand for nurses",
-      "Why nurses choose to work abroad",
-    ],
-  },
-  {
-    title: "Benefits of International Nursing",
-    items: ["Professional experience", "Cultural exchange", "Career opportunities", "Personal growth"],
-  },
-  {
-    title: "General Requirements to Work Abroad",
-    items: ["Nursing license recognition", "Language requirements", "Work permits and visas", "Clinical experience"],
-  },
-  {
-    title: "Licensing and Registration Process",
-    items: ["Credential evaluation", "Exams and assessments", "Timeframes and costs", "Common challenges"],
-  },
-  {
-    title: "Popular Destinations for Nurses",
-    items: [
-      "Kort oversikt (kan bli egna sidor):",
-      "Europe",
-      "United Kingdom",
-      "Australia",
-      "Middle East",
-      "Scandinavia",
-    ],
-  },
-  {
-    title: "Challenges and Considerations",
-    items: ["Cultural differences", "Healthcare system differences", "Cost of relocation", "Family considerations"],
-  },
-  {
-    title: "Preparing for a Smooth Transition",
-    items: ["Documentation checklist", "Language preparation", "Financial planning", "Support networks"],
-  },
-  {
-    title: "Final Advice",
-    items: ["Plan early", "Use reliable sources", "Connect with nurses who have worked abroad"],
-  },
-];
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from '@/lib/translations';
 
 export default function InternationalNursing() {
+  const searchParams = useSearchParams();
+  const lang = searchParams?.get('lang') || 'en';
+  const { t } = useTranslations(lang);
+
+  const parseItems = (itemString: string): string[] => {
+    return itemString.split('|').map(item => item.trim());
+  };
+
+  const sections = [
+    {
+      title: t('intlNursingIntroTitle'),
+      items: parseItems(t('intlNursingIntroItems')),
+    },
+    {
+      title: t('intlNursingBenefitsTitle'),
+      items: parseItems(t('intlNursingBenefitsItems')),
+    },
+    {
+      title: t('intlNursingRequirementsTitle'),
+      items: parseItems(t('intlNursingRequirementsItems')),
+    },
+    {
+      title: t('intlNursingLicensingTitle'),
+      items: parseItems(t('intlNursingLicensingItems')),
+    },
+    {
+      title: t('intlNursingDestinationsTitle'),
+      items: parseItems(t('intlNursingDestinationsItems')),
+    },
+    {
+      title: t('intlNursingChallengesTitle'),
+      items: parseItems(t('intlNursingChallengesItems')),
+    },
+    {
+      title: t('intlNursingPreparationTitle'),
+      items: parseItems(t('intlNursingPreparationItems')),
+    },
+    {
+      title: t('intlNursingAdviceTitle'),
+      items: parseItems(t('intlNursingAdviceItems')),
+    },
+  ];
+
+  // For now, content remains in English
+  // You can add translations later if needed
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -62,15 +64,15 @@ export default function InternationalNursing() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-blue-50 py-12 px-4">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="max-w-4xl mx-auto"
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-teal-900 mb-4">International Nursing Guide</h1>
-        <p className="text-lg text-slate-600 mb-12">Plan your move abroad with key requirements, destinations, and practical steps.</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-teal-900 mb-4">{t('intlNursingPageTitle')}</h1>
+        <p className="text-lg text-slate-600 mb-12">{t('intlNursingPageDesc')}</p>
       </motion.div>
 
       <motion.div
@@ -104,11 +106,11 @@ export default function InternationalNursing() {
         ))}
 
         <motion.div variants={itemVariants} className="bg-blue-100 rounded-lg p-6 mt-12">
-          <h3 className="text-xl font-semibold text-blue-900 mb-3">Next Steps</h3>
+          <h3 className="text-xl font-semibold text-blue-900 mb-3">{t('intlNursingNextTitle')}</h3>
           <ul className="space-y-2 text-blue-800">
-            <li>✓ Gather your documents early</li>
-            <li>✓ Verify licensing and visa timelines</li>
-            <li>✓ Connect with nurses already working abroad</li>
+            {parseItems(t('intlNursingNextItems')).map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
           </ul>
         </motion.div>
       </motion.div>
