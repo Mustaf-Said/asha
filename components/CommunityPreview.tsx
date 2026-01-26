@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "@/lib/translations";
 
-export default function CommunityPreview({ lang }: { lang?: string }) {
-  const { t } = useTranslations(lang);
+export default function CommunityPreview() {
+  const { t } = useTranslations();
 
   return (
     <section className="py-20 bg-slate-50">
@@ -17,7 +17,7 @@ export default function CommunityPreview({ lang }: { lang?: string }) {
           <p className="mt-4 text-slate-600">
             {t('communityPreviewDesc')}
           </p>
-          <Link href={`/community${lang && lang !== 'en' ? `?lang=${lang}` : ''}`} className="inline-block mt-6 bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition">
+          <Link href="/community" className="inline-block mt-6 bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition">
             {t('joinCommunity')}
           </Link>
         </div>

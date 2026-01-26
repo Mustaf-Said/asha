@@ -1,3 +1,7 @@
+"use client";
+
+import { useLanguage } from '@/contexts/LanguageContext';
+
 export type LangCode = 'en' | 'so' | 'ar';
 
 // Split translations into sections for different items (pipe-separated)
@@ -410,10 +414,10 @@ export function getTranslation(lang: LangCode, key: keyof typeof translations.en
   return translations[lang]?.[key] || translations.en[key];
 }
 
-export function useTranslations(lang?: string | null) {
-  const normalizedLang = (lang === 'so' || lang === 'ar') ? lang : 'en';
+export function useTranslations() {
+  const { language } = useLanguage();
   return {
-    t: (key: keyof typeof translations.en) => getTranslation(normalizedLang, key),
-    lang: normalizedLang,
+    t: (key: keyof typeof translations.en) => getTranslation(language, key),
+    lang: language,
   };
 }

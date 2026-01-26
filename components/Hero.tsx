@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useTranslations } from "@/lib/translations";
 
-export default function Hero({ lang }: { lang?: string }) {
-  const { t } = useTranslations(lang);
+export default function Hero() {
+  const { t } = useTranslations();
 
   return (
     <section className="bg-linear-to-br from-slate-50 to-teal-50 py-24">
@@ -18,10 +18,10 @@ export default function Hero({ lang }: { lang?: string }) {
         </p>
 
         <div className="mt-10 flex justify-center gap-4">
-          <Link href={`/guidance${lang && lang !== 'en' ? `?lang=${lang}` : ''}`} className="bg-teal-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-teal-700 transition">
+          <Link href="/guidance" className="bg-teal-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-teal-700 transition">
             {t('exploreGuidance')}
           </Link>
-          <Link href={`/community${lang && lang !== 'en' ? `?lang=${lang}` : ''}`} className="border border-slate-300 px-6 py-3 rounded-lg text-slate-700 hover:bg-slate-100 transition">
+          <Link href="/community" className="border border-slate-300 px-6 py-3 rounded-lg text-slate-700 hover:bg-slate-100 transition">
             {t('joinCommunity')}
           </Link>
         </div>

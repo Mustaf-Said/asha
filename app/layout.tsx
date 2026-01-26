@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 import "./globals.css";
 
@@ -33,15 +34,17 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Suspense fallback={<div className="h-16 bg-white border-b border-blue-200" />}>
-          <Header />
-        </Suspense>
-        <main>
-          {children}
-        </main>
-        <Suspense fallback={null}>
-          <Footer />
-        </Suspense>
+        <LanguageProvider>
+          <Suspense fallback={<div className="h-16 bg-white border-b border-blue-200" />}>
+            <Header />
+          </Suspense>
+          <main>
+            {children}
+          </main>
+          <Suspense fallback={null}>
+            <Footer />
+          </Suspense>
+        </LanguageProvider>
       </body>
     </html>
   );

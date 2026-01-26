@@ -37,8 +37,8 @@ const categories = [
   },
 ];
 
-export default function CategoryGrid({ lang }: { lang?: string }) {
-  const { t } = useTranslations(lang);
+export default function CategoryGrid() {
+  const { t } = useTranslations();
   return (
     <section className="py-20">
       <div className="max-w-6xl mx-auto px-6">
@@ -50,7 +50,7 @@ export default function CategoryGrid({ lang }: { lang?: string }) {
           {categories.map((cat) => (
             <Link
               key={cat.slug}
-              href={`/guidance?category=${cat.slug}${lang && lang !== 'en' ? `&lang=${lang}` : ''}`}
+              href={`/guidance?category=${cat.slug}`}
               className="group rounded-xl border border-teal-200 p-6 bg-white hover:shadow-md transition block"
             >
               {/* Image */}

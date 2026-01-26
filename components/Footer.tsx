@@ -1,15 +1,10 @@
 "use client";
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { useTranslations } from '@/lib/translations';
 
-export default function Footer({ lang: langProp }: { lang?: string } = {}) {
-  const searchParams = useSearchParams();
-  const lang = langProp || searchParams?.get('lang') || 'en';
-  const { t } = useTranslations(lang);
-  const langParam = lang && lang !== 'en' ? `?lang=${lang}` : '';
-  const langParamCategory = lang && lang !== 'en' ? `&lang=${lang}` : '';
+export default function Footer() {
+  const { t } = useTranslations();
 
   return (
     <footer className="bg-slate-900 text-slate-300">
@@ -31,11 +26,11 @@ export default function Footer({ lang: langProp }: { lang?: string } = {}) {
             {t('footerGuidance')}
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href={`/guidance?category=nursing-students${langParamCategory}`} className="hover:text-white">{t('nursingStudents')}</Link></li>
-            <li><Link href={`/guidance?category=career-development${langParamCategory}`} className="hover:text-white">{t('careerDevelopment')}</Link></li>
-            <li><Link href={`/guidance?category=leadership${langParamCategory}`} className="hover:text-white">{t('leadership')}</Link></li>
-            <li><Link href={`/guidance?category=wellbeing${langParamCategory}`} className="hover:text-white">{t('wellbeing')}</Link></li>
-            <li><Link href={`/guidance?category=international-nursing${langParamCategory}`} className="hover:text-white">{t('internationalNursing')}</Link></li>
+            <li><Link href="/guidance?category=nursing-students" className="hover:text-white">{t('nursingStudents')}</Link></li>
+            <li><Link href="/guidance?category=career-development" className="hover:text-white">{t('careerDevelopment')}</Link></li>
+            <li><Link href="/guidance?category=leadership" className="hover:text-white">{t('leadership')}</Link></li>
+            <li><Link href="/guidance?category=wellbeing" className="hover:text-white">{t('wellbeing')}</Link></li>
+            <li><Link href="/guidance?category=international-nursing" className="hover:text-white">{t('internationalNursing')}</Link></li>
           </ul>
         </div>
 
@@ -45,9 +40,9 @@ export default function Footer({ lang: langProp }: { lang?: string } = {}) {
             {t('footerCommunity')}
           </h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href={`/community${langParam}`} className="hover:text-white">{t('footerJoinCommunity')}</Link></li>
-            <li><Link href={`/community/rules${langParam}`} className="hover:text-white">{t('footerCommunityGuidelines')}</Link></li>
-            <li><Link href={`/about${langParam}`} className="hover:text-white">{t('footerAboutFounder')}</Link></li>
+            <li><Link href="/community" className="hover:text-white">{t('footerJoinCommunity')}</Link></li>
+            <li><Link href="/community/rules" className="hover:text-white">{t('footerCommunityGuidelines')}</Link></li>
+            <li><Link href="/about" className="hover:text-white">{t('footerAboutFounder')}</Link></li>
           </ul>
         </div>
 

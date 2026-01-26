@@ -24,8 +24,8 @@ const featuredGuidance = [
   },
 ];
 
-export default function FeaturedGuidance({ lang }: { lang?: string }) {
-  const { t } = useTranslations(lang);
+export default function FeaturedGuidance() {
+  const { t } = useTranslations();
 
   return (
     <section className="bg-slate-50 py-20">
@@ -38,7 +38,7 @@ export default function FeaturedGuidance({ lang }: { lang?: string }) {
           {featuredGuidance.map((item) => (
             <Link
               key={item.href}
-              href={`${item.href}${lang && lang !== 'en' ? `?lang=${lang}` : ''}`}
+              href={item.href}
               target="_blank"
               className="group relative h-[320px] rounded-2xl overflow-hidden border border-slate-200"
             >

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
 import { useTranslations } from "@/lib/translations";
+import { useLanguage, LangCode } from "@/contexts/LanguageContext";
 
 const guidanceCategories = [
   { title: "Nursing Students", slug: "nursing-students", icon: "👨‍🎓" },
@@ -50,13 +51,9 @@ const Icons = {
 
 export default function Header() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { user, logout } = useUser();
-
-  const activeCategory = searchParams.get("category");
-  const activeLang = searchParams.get("lang") || "en";
-  const { t } = useTranslations(activeLang);
-  const isGuidanceActive = pathname === "/guidance";
+  const { language, setLanguage } = useLanguage();
+  const { t } = useTranslations();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopGuidanceOpen, setDesktopGuidanceOpen] = useState(false);
@@ -80,21 +77,10 @@ export default function Header() {
   }, []);
 
   const languages = [
-    { code: "en", label: "English" },
-    { code: "so", label: "Somali" },
-    { code: "ar", label: "Arabic" },
+    { code: "en" as LangCode, label: "English" },
+    { code: "so" as LangCode, label: "Somali" },
+    { code: "ar" as LangCode, label: "Arabic" },
   ];
-
-  const buildLangHref = (code: string) => {
-    const params = new URLSearchParams(searchParams?.toString());
-    if (code === "en") {
-      params.delete("lang");
-    } else {
-      params.set("lang", code);
-    }
-    const qs = params.toString();
-    return qs ? `${pathname}?${qs}` : pathname;
-  };
 
   return (
     <header className="sticky top-0 z-50 bg-linear-to-r from-teal-600 via-teal-500 to-cyan-500 shadow-lg border-b border-teal-700">
@@ -129,14 +115,11 @@ export default function Header() {
                   {guidanceCategories.map((cat) => (
                     <Link
                       key={cat.slug}
-                      href={`/guidance?category=${cat.slug}${activeLang !== 'en' ? `&lang=${activeLang}` : ''}`}
+                      href={`/guidance?category=${cat.slug}`}
                       onClick={() =>
                         setDesktopGuidanceOpen(false)
                       }
-                      className={`flex items-center gap-2 px-4 py-3 rounded-lg transition ${activeCategory === cat.slug
-                        ? "bg-teal-100 text-teal-700 font-semibold"
-                        : "text-slate-700 hover:bg-slate-100"
-                        }`}
+                      className="flex items-center gap-2 px-4 py-3 rounded-lg transition text-slate-700 hover:bg-slate-100"
                     >
                       <span>{cat.icon}</span>
                       {cat.title}
@@ -147,7 +130,7 @@ export default function Header() {
             </div>
 
             <Link
-              href={`/community${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
+              href="/community"
               className={`flex items-center gap-2 px-3 py-2 rounded-lg transition font-medium ${pathname === "/community"
                 ? "bg-white/20 text-white"
                 : "text-white hover:bg-white/10"
@@ -158,7 +141,7 @@ export default function Header() {
             </Link>
 
             <Link
-              href={`/shop${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
+              href="/shop"
               className={`px-3 py-2 rounded-lg transition font-medium ${pathname === "/shop"
                 ? "bg-white/20 text-white"
                 : "text-white hover:bg-white/10"
@@ -168,7 +151,7 @@ export default function Header() {
             </Link>
 
             <Link
-              href={`/about${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
+              href="/about"
               className={`px-3 py-2 rounded-lg transition font-medium ${pathname === "/about"
                 ? "bg-white/20 text-white"
                 : "text-white hover:bg-white/10"
@@ -182,18 +165,18 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-4">
             <div className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 text-xs font-medium text-white">
               {languages.map((lang) => {
-                const isActive = activeLang === lang.code || (!searchParams.get("lang") && lang.code === "en");
+                const isActive = language === lang.code;
                 return (
-                  <Link
+                  <button
                     key={lang.code}
-                    href={buildLangHref(lang.code)}
-                    className={`px-3 py-1 rounded-full transition-all duration-300 ease-in-out ${isActive
+                    onClick={() => setLanguage(lang.code)}
+                    className={`px-3 py-1 rounded-full transition-all duration-200 ${isActive
                       ? "bg-white text-teal-600 shadow"
                       : "hover:bg-white/20"
                       }`}
                   >
                     {lang.label}
-                  </Link>
+                  </button>
                 );
               })}
             </div>
@@ -220,13 +203,13 @@ export default function Header() {
               <>
                 <Link
                   href="/login"
-                  className="px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition"
+                  className="px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition min-w-[100px] text-center"
                 >
                   {t('signIn')}
                 </Link>
                 <Link
                   href="/login"
-                  className="px-4 py-2 rounded-lg bg-white text-teal-600 font-bold hover:bg-gray-100 transition shadow-lg"
+                  className="px-4 py-2 rounded-lg bg-white text-teal-600 font-bold hover:bg-gray-100 transition shadow-lg min-w-[120px] text-center"
                 >
                   {t('getStarted')}
                 </Link>
@@ -250,19 +233,21 @@ export default function Header() {
             <nav className="flex flex-col gap-2">
               <div className="flex gap-2 mb-3">
                 {languages.map((lang) => {
-                  const isActive = activeLang === lang.code || (!searchParams.get("lang") && lang.code === "en");
+                  const isActive = language === lang.code;
                   return (
-                    <Link
+                    <button
                       key={lang.code}
-                      href={buildLangHref(lang.code)}
-                      onClick={() => setMobileOpen(false)}
-                      className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out ${isActive
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setMobileOpen(false);
+                      }}
+                      className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive
                         ? "bg-white text-teal-700 shadow"
                         : "bg-teal-600 text-white hover:bg-teal-500"
                         }`}
                     >
                       {lang.label}
-                    </Link>
+                    </button>
                   );
                 })}
               </div>
@@ -287,15 +272,12 @@ export default function Header() {
                     {guidanceCategories.map((cat) => (
                       <Link
                         key={cat.slug}
-                        href={`/guidance?category=${cat.slug}${activeLang !== 'en' ? `&lang=${activeLang}` : ''}`}
+                        href={`/guidance?category=${cat.slug}`}
                         onClick={() => {
                           setMobileOpen(false);
                           setMobileGuidanceOpen(false);
                         }}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg transition ${activeCategory === cat.slug
-                          ? "bg-white text-teal-700 font-semibold"
-                          : "text-white hover:bg-teal-500"
-                          }`}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg transition text-white hover:bg-teal-500"
                       >
                         <span>{cat.icon}</span>
                         {cat.title}
@@ -306,7 +288,7 @@ export default function Header() {
               </div>
 
               <Link
-                href={`/community${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
+                href="/community"
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-2 px-4 py-3 rounded-lg transition font-medium ${pathname === "/community"
                   ? "bg-white/20 text-white"
@@ -318,7 +300,7 @@ export default function Header() {
               </Link>
 
               <Link
-                href={`/shop${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
+                href="/shop"
                 onClick={() => setMobileOpen(false)}
                 className={`px-4 py-3 rounded-lg transition font-medium ${pathname === "/shop"
                   ? "bg-white/20 text-white"
@@ -329,7 +311,7 @@ export default function Header() {
               </Link>
 
               <Link
-                href={`/about${activeLang !== 'en' ? `?lang=${activeLang}` : ''}`}
+                href="/about"
                 onClick={() => setMobileOpen(false)}
                 className={`px-4 py-3 rounded-lg transition font-medium ${pathname === "/about"
                   ? "bg-white/20 text-white"
