@@ -18,11 +18,11 @@ export default async function LoginPage() {
 
           <LoginForm />
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          {/*  <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
             <p className="text-sm text-blue-900 font-medium">Demo Account (Sign In):</p>
             <p className="text-sm text-blue-800 mt-2">Email: <code className="bg-blue-100 px-2 py-1 rounded">nurse1@example.com</code></p>
             <p className="text-sm text-blue-800">Password: <code className="bg-blue-100 px-2 py-1 rounded">password123</code></p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
