@@ -7,7 +7,6 @@ import { useTranslations } from '@/lib/translations';
 export default function CareerPaths() {
   const searchParams = useSearchParams();
   const lang = searchParams?.get('lang') || 'en';
-
   const { t } = useTranslations();
   const isRTL = lang === 'ar';
 
