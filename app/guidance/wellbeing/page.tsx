@@ -7,7 +7,7 @@ import { useTranslations } from '@/lib/translations';
 export default function WellbeingPage() {
   const searchParams = useSearchParams();
   const lang = searchParams?.get('lang') || 'en';
-  const { t } = useTranslations(lang);
+  const { t } = useTranslations();
   const isRTL = lang === 'ar';
 
   const parseItems = (itemString: string): string[] => {

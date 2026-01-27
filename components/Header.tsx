@@ -203,13 +203,13 @@ export default function Header() {
               <>
                 <Link
                   href="/login"
-                  className="px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition min-w-[100px] text-center"
+                  className="px-4 py-2 rounded-lg text-white font-medium hover:bg-white/20 transition min-w-25 text-center"
                 >
                   {t('signIn')}
                 </Link>
                 <Link
                   href="/login"
-                  className="px-4 py-2 rounded-lg bg-white text-teal-600 font-bold hover:bg-gray-100 transition shadow-lg min-w-[120px] text-center"
+                  className="px-4 py-2 rounded-lg bg-white text-teal-600 font-bold hover:bg-gray-100 transition shadow-lg min-w-30 text-center"
                 >
                   {t('getStarted')}
                 </Link>

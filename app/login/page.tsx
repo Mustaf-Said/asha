@@ -10,7 +10,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome to Asha</h1>
