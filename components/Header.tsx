@@ -58,8 +58,10 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopGuidanceOpen, setDesktopGuidanceOpen] = useState(false);
   const [mobileGuidanceOpen, setMobileGuidanceOpen] = useState(false);
+  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const languageDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -68,6 +70,12 @@ export default function Header() {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setDesktopGuidanceOpen(false);
+      }
+      if (
+        languageDropdownRef.current &&
+        !languageDropdownRef.current.contains(event.target as Node)
+      ) {
+        setLanguageDropdownOpen(false);
       }
     }
 
@@ -111,7 +119,7 @@ export default function Header() {
               </button>
 
               {desktopGuidanceOpen && (
-                <div className="absolute left-0 top-full mt-1 w-60 bg-white border border-slate-200 rounded-xl shadow-xl p-2 z-50">
+                <div className="absolute text-[13px] left-0 top-full mt-1 w-30 bg-white border border-slate-200 rounded-xl shadow-xl p-2 z-50">
                   {guidanceCategories.map((cat) => (
                     <Link
                       key={cat.slug}
@@ -121,7 +129,7 @@ export default function Header() {
                       }
                       className="flex items-center gap-2 px-4 py-3 rounded-lg transition text-slate-700 hover:bg-slate-100"
                     >
-                      <span>{cat.icon}</span>
+                      {/* <span>{cat.icon}</span> */}
                       {cat.title}
                     </Link>
                   ))}
@@ -136,7 +144,7 @@ export default function Header() {
                 : "text-white hover:bg-white/10"
                 }`}
             >
-              <Icons.Users />
+              {/* <Icons.Users /> */}
               {t('community')}
             </Link>
 
@@ -163,22 +171,41 @@ export default function Header() {
 
           {/* Desktop Lang Switch + User Section */}
           <div className="hidden lg:flex items-center gap-4">
-            <div className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 text-xs font-medium text-white">
-              {languages.map((lang) => {
-                const isActive = language === lang.code;
-                return (
-                  <button
-                    key={lang.code}
-                    onClick={() => setLanguage(lang.code)}
-                    className={`px-3 py-1 rounded-full transition-all duration-200 ${isActive
-                      ? "bg-white text-teal-600 shadow"
-                      : "hover:bg-white/20"
-                      }`}
-                  >
-                    {lang.label}
-                  </button>
-                );
-              })}
+            {/* Language Dropdown (Desktop) */}
+            <div ref={languageDropdownRef} className="relative">
+              <button
+                onClick={() =>
+                  setLanguageDropdownOpen((prev) => !prev)
+                }
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/20 transition font-medium text-sm"
+                aria-expanded={languageDropdownOpen}
+              >
+                {/*    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
+                </svg> */}
+                {languages.find(l => l.code === language)?.label}
+                <Icons.ChevronDown />
+              </button>
+
+              {languageDropdownOpen && (
+                <div className="absolute right-0 text-[13px] top-full mt-1 w-25 bg-white border border-slate-200 rounded-xl shadow-xl p-2 z-50">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setLanguageDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 rounded-lg transition ${language === lang.code
+                        ? "bg-teal-100 text-teal-700 font-semibold"
+                        : "text-slate-700 hover:bg-slate-100"
+                        }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {user ? (
@@ -231,25 +258,29 @@ export default function Header() {
         {mobileOpen && (
           <div className="lg:hidden bg-teal-700 border-t border-teal-600 p-4 pb-6">
             <nav className="flex flex-col gap-2">
-              <div className="flex gap-2 mb-3">
-                {languages.map((lang) => {
-                  const isActive = language === lang.code;
-                  return (
-                    <button
-                      key={lang.code}
-                      onClick={() => {
-                        setLanguage(lang.code);
-                        setMobileOpen(false);
-                      }}
-                      className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive
-                        ? "bg-white text-teal-700 shadow"
-                        : "bg-teal-600 text-white hover:bg-teal-500"
-                        }`}
-                    >
-                      {lang.label}
-                    </button>
-                  );
-                })}
+              {/* Mobile Language Selector */}
+              <div className="mb-4 pb-3 border-b border-teal-600">
+                <p className="text-xs font-semibold text-white/70 uppercase mb-2">Language</p>
+                <div className="flex gap-2">
+                  {languages.map((lang) => {
+                    const isActive = language === lang.code;
+                    return (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setLanguage(lang.code);
+                          setMobileOpen(false);
+                        }}
+                        className={`flex-1 text-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive
+                          ? "bg-white text-teal-700 shadow"
+                          : "bg-teal-600 text-white hover:bg-teal-500"
+                          }`}
+                      >
+                        {lang.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Mobile Guidance */}
@@ -295,7 +326,7 @@ export default function Header() {
                   : "text-white hover:bg-teal-600"
                   }`}
               >
-                <Icons.Users />
+                {/* <Icons.Users /> */}
                 {t('community')}
               </Link>
 
