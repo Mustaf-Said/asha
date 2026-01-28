@@ -24,5 +24,18 @@ export default defineType({
       type: "array",
       of: [{ type: "block" }],
     }),
+    defineField({
+      name: "sections",
+      title: "Page Sections",
+      type: "array",
+      of: [
+        { type: "heroSection" },
+        { type: "featuredGuidanceSection" },
+        { type: "textContentSection" },
+        { type: "resourceListSection" },
+        { type: "imageTextSection" },
+        { type: "ctaSection" },
+      ],
+    }),
   ],
 });

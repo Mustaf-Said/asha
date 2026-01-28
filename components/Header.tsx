@@ -167,6 +167,17 @@ export default function Header() {
             >
               {t('about')}
             </Link>
+
+            <Link
+              href="/resources"
+              className={`px-3 py-2 rounded-lg transition font-medium ${pathname === "/resources"
+                ? "bg-white/20 text-white"
+                : "text-white hover:bg-white/10"
+                }`}
+            >
+              Resources
+            </Link>
+
           </nav>
 
           {/* Desktop Lang Switch + User Section */}
