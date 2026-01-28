@@ -163,7 +163,7 @@ export default function Header() {
 
           {/* Desktop Lang Switch + User Section */}
           <div className="hidden lg:flex items-center gap-4">
-            <div className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 text-xs font-medium text-white">
+            {/* <div className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 text-xs font-medium text-white">
               {languages.map((lang) => {
                 const isActive = language === lang.code;
                 return (
@@ -179,7 +179,7 @@ export default function Header() {
                   </button>
                 );
               })}
-            </div>
+            </div> */}
 
             {user ? (
               <>
