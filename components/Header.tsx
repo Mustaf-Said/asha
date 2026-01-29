@@ -168,7 +168,7 @@ export default function Header() {
               {t('about')}
             </Link>
 
-            <Link
+            {/*  <Link
               href="/resources"
               className={`px-3 py-2 rounded-lg transition font-medium ${pathname === "/resources"
                 ? "bg-white/20 text-white"
@@ -176,7 +176,7 @@ export default function Header() {
                 }`}
             >
               Resources
-            </Link>
+            </Link> */}
 
           </nav>
 
